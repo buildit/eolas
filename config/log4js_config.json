@@ -1,0 +1,14 @@
+{
+   "appenders": [
+      {
+      	"type": "dateFile",
+      	"filename": "MI-API.log",
+   	   	"pattern": "-yyyy-MM-dd",
+      	"alwaysIncludePattern": true,
+      	"layout": {
+          	"type": "pattern",
+          	"pattern": "[%r] [%h] [%p] - %m"
+        	}
+      }
+    ]
+}

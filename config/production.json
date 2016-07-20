@@ -1,0 +1,14 @@
+{
+   "jira": {
+      "maxResultCount": 50,
+      "demandItem": "Story",
+      "defectItem": "Bug"
+   },
+   "datastore": {
+     "dbUrl": "mongodb://mongodb.buildit.tools:27017"
+   },
+   "server": {
+      "port": 80
+   },
+   "log-level": "INFO"
+}

@@ -1,0 +1,14 @@
+{
+   "jira": {
+      "maxResultCount": 50,
+      "demandItem": "Story",
+      "defectItem": "Bug"
+   },
+   "datastore": {
+      "dbUrl": "mongodb://localhost:27017"
+   },
+   "server": {
+      "port": 6565
+   },
+   "log-level": "DEBUG"
+}
