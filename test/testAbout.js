@@ -32,7 +32,7 @@ describe('About Controller Tests', function() {
 
     response.on('end', function() {
       var body = JSON.parse(response._getData());
-      body.should.have.property('datastore');
+      should(body).have.property('datastore');
       done();
     });
 
