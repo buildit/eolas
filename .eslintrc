@@ -3,5 +3,10 @@
   "env": {
         "es6": true,
         "node": true
-    }
+    },
+  "globals": {
+     "describe": false,
+     "it": false,
+     "should": false
+     }
 }
