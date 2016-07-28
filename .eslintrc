@@ -7,6 +7,6 @@
   "globals": {
      "describe": false,
      "it": false,
-     "should": false
+     "should": false,
      }
 }

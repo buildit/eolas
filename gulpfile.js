@@ -2,7 +2,8 @@ const del = require('del');
 const eslint = require('gulp-eslint');
 const gulp = require('gulp');
 const mocha = require('gulp-mocha');
-var gulpNSP = require('gulp-nsp');
+const rename = require('gulp-rename');
+const gulpNSP = require('gulp-nsp');
 
 gulp.task('clean', () => (
   del(['dist'])
@@ -13,6 +14,18 @@ gulp.task('lint', () => {
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
+});
+
+gulp.task('package', ['clean'], () => {
+  gulp.src('./config/production.json')
+    .pipe(rename('config.js'))
+    .pipe(gulp.dest('./dist/config'));
+  gulp.src('./routes/*.js')
+  .pipe(gulp.dest('./dist/routes'));
+  gulp.src('./services/*.js')
+  .pipe(gulp.dest('./dist/services'));
+  gulp.src('./index.js')
+  .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('test', function () {
