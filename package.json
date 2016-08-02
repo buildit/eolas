@@ -9,6 +9,7 @@
   "author": "buildit",
   "license": "MIT",
   "devDependencies": {
+    "chakram": "^1.4.0",
     "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",

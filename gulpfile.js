@@ -18,7 +18,7 @@ gulp.task('lint', () => {
 
 gulp.task('package', ['clean'], () => {
   gulp.src('./config/production.json')
-    .pipe(rename('config.js'))
+    .pipe(rename('config.json'))
     .pipe(gulp.dest('./dist/config'));
   gulp.src('./routes/*.js')
   .pipe(gulp.dest('./dist/routes'));
@@ -30,6 +30,17 @@ gulp.task('package', ['clean'], () => {
 
 gulp.task('test', function () {
   return gulp.src('./test/*.js', { read: false })
+      .pipe(mocha({reporter: 'dot'}))
+      .once('error', () => {
+          process.exit(1);
+      })
+      .once('end', () => {
+          process.exit();
+      });
+});
+
+gulp.task('accept', function () {
+  return gulp.src('./test_accept/*.js', { read: false })
       .pipe(mocha({reporter: 'dot'}))
       .once('error', () => {
           process.exit(1);

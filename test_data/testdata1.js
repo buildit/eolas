@@ -91,8 +91,6 @@ projectionInfo = {
     effort: effortInfo,
     projection: projectionInfo};
 
-console.log("Project ID " + projects.id);
-
 MongoClient.connect(config.get('datastore.dbUrl') + '/' + BUILDIT_DBNAME, function (err, db) {
   assert.equal(null, err);
   var col = db.collection('project');
