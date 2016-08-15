@@ -53,5 +53,5 @@ This project makes use of gulp.js as a build manager.
 | `gulp lint`        | Run ESLint on all project .js files                                 |
 | `gulp nsp`         | Run node security check                                             |
 | `gulp test`        | Run unit tests (mocha)                                              |
-| `gulp accept`      | Run acceptance tests (chakram) - requires the server to be running  |
 | `gulp build`       | Run all of the above                                                |
+| `gulp accept`      | Run acceptance tests (chakram) - requires the server to be running  |

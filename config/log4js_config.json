@@ -2,7 +2,7 @@
    "appenders": [
       {
       	"type": "dateFile",
-      	"filename": "MI-API.log",
+      	"filename": "Eolas.log",
    	   	"pattern": "-yyyy-MM-dd",
       	"alwaysIncludePattern": true,
       	"layout": {

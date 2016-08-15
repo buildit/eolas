@@ -12,7 +12,7 @@ logger.setLevel(config.get('log-level'));
 
 const app = express();
 
-app.use(processors);
+app.use('/', processors);
 app.use('/ping', about);
 
 const port = config.get('server.port');

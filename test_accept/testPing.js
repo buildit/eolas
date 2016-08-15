@@ -1,6 +1,7 @@
 const chakram = require('chakram');
 const expect = chakram.expect;
 
+/* eslint-disable no-undef */
 describe("Testing Generic Response Stuff", function() {
   before("call ping", function () {
     pingResponse = chakram.get("http://localhost:6565/ping");
@@ -18,6 +19,7 @@ describe("Testing Generic Response Stuff", function() {
     expect(pingResponse).to.have.header('Access-Control-Allow-Origin');
   });
 });
+/* eslint-enable no-undef */
 
 describe("Testing Ping", function() {
     it("service should respond with echo", function () {

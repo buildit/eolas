@@ -30,7 +30,7 @@ gulp.task('package', ['clean'], () => {
 
 gulp.task('test', function () {
   return gulp.src('./test/*.js', { read: false })
-      .pipe(mocha({reporter: 'dot'}))
+      .pipe(mocha({reporter: 'spec'}))
       .once('error', () => {
           process.exit(1);
       })
@@ -41,7 +41,7 @@ gulp.task('test', function () {
 
 gulp.task('accept', function () {
   return gulp.src('./test_accept/*.js', { read: false })
-      .pipe(mocha({reporter: 'dot'}))
+      .pipe(mocha({reporter: 'spec'}))
       .once('error', () => {
           process.exit(1);
       })
