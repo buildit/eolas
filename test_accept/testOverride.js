@@ -10,3 +10,13 @@ describe("Testing Method Override", function() {
        });
     });
 });
+
+describe("Testing Failed Override Message", function() {
+  before("call DELETE on ping", function () {
+    pingResponse = chakram.post("http://localhost:6565/ping", {'Hello': 'World'}, {headers: {'X-HTTP-Method-Override': 'DELETE'}})
+  });
+
+  it("should return 404 ", function () {
+      return expect(pingResponse).to.have.status(404);
+  });
+});

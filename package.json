@@ -26,6 +26,7 @@
     "log4js": "^0.6.37",
     "method-override": "^2.3.6",
     "mongodb": "^2.2.4",
-    "response-time": "^2.3.1"
+    "response-time": "^2.3.1",
+    "try": "^0.13.3"
   }
 }

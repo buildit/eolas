@@ -10,5 +10,6 @@
    "server": {
       "port": 6565
    },
+   "apiDocFilePath": "./api_doc/swagger.json",
    "log-level": "DEBUG"
 }

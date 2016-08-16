@@ -5,6 +5,7 @@ const log4js = require('log4js');
 const express = require('express');
 const processors = require('./routes/processors');
 const about = require('./routes/about');
+const apiDocs = require('./api_doc/swaggerDoc');
 
 log4js.configure('./config/log4js_config.json', {});
 const logger = log4js.getLogger();
@@ -14,6 +15,7 @@ const app = express();
 
 app.use('/', processors);
 app.use('/ping', about);
+app.use('/doc', apiDocs.serveDoc);
 
 const port = config.get('server.port');
 app.listen(port, function () {

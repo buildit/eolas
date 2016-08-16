@@ -1,0 +1,47 @@
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Eolas
+  description: |
+    REST based service to provide summarized metrics for visualization and analysis.
+
+host: eolas.buildit.tools
+basePath: /v1
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+
+tags:
+  - name: Ping
+  - name: Project
+
+paths:
+  /ping:
+    get:
+      tags:
+        - Ping
+      description: |
+        Verifies the service is responsive.  Returns the contents of the deployed service's configuration file.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: App Configuration Data
+            type: object
+  /ping/deep:
+    get:
+      tags:
+        - Ping
+      description: |
+        Verifies the service is functional.  Verifies that all external sources are reachable.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: Array of known sources and their status
+            type: object

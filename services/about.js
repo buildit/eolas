@@ -9,11 +9,11 @@ logger.setLevel(config.get('log-level'));
 
 
 exports.ping = function(req, res) {
-  logger.info('ping');
+  logger.debug('ping');
   res.json('echo');
 };
 
 exports.deepPing = function(req, res) {
-  logger.info('pingDeep');
+  logger.debug('pingDeep');
   res.json(config);
 };
