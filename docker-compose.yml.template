@@ -1,0 +1,8 @@
+node:
+  restart: always
+  build: .
+  ports:
+    - "80"
+  environment:
+    - NODE_ENV=production
+    - NODE_CONFIG={"datastore":{"dbUrl":"mongodb://${mongo_hostname}:27017"}}
