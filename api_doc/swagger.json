@@ -21,6 +21,9 @@
             "name": "Ping"
         },
         {
+            "name": "Documentation"
+        },
+        {
             "name": "Project"
         }
     ],
@@ -53,6 +56,23 @@
                         "description": "Successful response",
                         "schema": {
                             "title": "Array of known sources and their status",
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/doc": {
+            "get": {
+                "tags": [
+                    "Documentation"
+                ],
+                "description": "Serves up the Swagger stype API documentation.\n",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "Swagger Documentation",
                             "type": "object"
                         }
                     }

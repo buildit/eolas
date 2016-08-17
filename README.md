@@ -11,7 +11,7 @@ This service requires a data store. At this time that is MongoDB.
 Please install, configure, and have it running prior to using this app.
 Then use the `config/development.json` to set the mongodb URL.
 
-See installation hints [here](`mongodb.md`)
+See MongoDB installation hints [here](mongodb.md "Mongo DB installtion instructions")
 
 Prior to using or developing run the command below to load all node.js requirements
 
@@ -55,3 +55,6 @@ This project makes use of gulp.js as a build manager.
 | `gulp test`        | Run unit tests (mocha)                                              |
 | `gulp build`       | Run all of the above                                                |
 | `gulp accept`      | Run acceptance tests (chakram) - requires the server to be running  |
+
+## Swagger API
+[Directions](swagger.md "Swagger documentation generation")
