@@ -54,7 +54,7 @@ node {
         writeFile(file: tmpFile, text: ymlData)
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
-        sh "convox env set NODE_ENV=production NODE_CONFIG={"datastore":{"dbUrl":"mongodb://${env.MONGO_HOSTNAME}:27017"}} --app ${appName}-staging"
+        sh "convox env set NODE_ENV=production NODE_CONFIG={'datastore':{'dbUrl':'mongodb://${env.MONGO_HOSTNAME}:27017'}} --app ${appName}-staging"
         sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile}"
 
       stage "Run Functional Tests"
