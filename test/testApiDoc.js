@@ -2,7 +2,6 @@ const apiDocs = require('../api_doc/swaggerDoc');
 const config = require('config');
 const http_mocks = require('node-mocks-http');
 const fs = require('fs');
-const should = require('should');
 
 function buildResponse() {
   return http_mocks.createResponse({eventEmitter: require('events').EventEmitter})

@@ -9,5 +9,6 @@
      "it": false,
      "should": false,
      "before": false,
+     "beforeEach": false,
      }
 }

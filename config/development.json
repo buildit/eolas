@@ -8,6 +8,7 @@
       "dbUrl": "mongodb://localhost:27017"
    },
    "server": {
+      "url": "localhost",
       "port": 6565
    },
    "apiDocFilePath": "./api_doc/swagger.json",
