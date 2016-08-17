@@ -46,15 +46,13 @@ It is handy to have console logging on when debugging so add the following into 
 ```
 ## DEVELOPMENT
 
-This project makes use of gulp.js as a build manager.
-
-| cli                | purpose                                                             |
-|--------------------|---------------------------------------------------------------------|
-| `gulp lint`        | Run ESLint on all project .js files                                 |
-| `gulp nsp`         | Run node security check                                             |
-| `gulp test`        | Run unit tests (mocha)                                              |
-| `gulp build`       | Run all of the above                                                |
-| `gulp accept`      | Run acceptance tests (chakram) - requires the server to be running  |
+| cli                 | purpose                                                             |
+|---------------------|---------------------------------------------------------------------|
+| `npm run lint`      | Run ESLint on all project .js files                                 |
+| `npm run security`  | Run node security check                                             |
+| `npm run test`      | Run unit tests (mocha)                                              |
+| `npm run build`     | Run all of the above                                                |
+| `npm run accept`    | Run acceptance tests (chakram) - requires the server to be running  |
 
 ## Swagger API
 [Directions](swagger.md "Swagger documentation generation")

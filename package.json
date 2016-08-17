@@ -4,19 +4,31 @@
   "description": "REST Services in support of the Buildit MI dashboard tools",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp",
+    "lint": "echo '=> linting' && eslint api_doc/ routes/ services/ test/ test_accept/ *.js",
+    "test": "echo '=> testing' && mocha test -R spec",
+    "security": "echo '=> nsp testing' && nsp check --output summary",
+    "accept": "echo '=> accept' && mocha test_accept -R spec",
+    "build": "echo '=> building' && npm run lint && npm run test && npm run security"
+  },
+  "pre-commit": [
+    "lint", "test", "security"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/digitalrigbitbucketteam/eolas.git"
   },
   "author": "buildit",
   "license": "MIT",
   "devDependencies": {
     "chakram": "^1.4.0",
     "del": "^2.2.1",
+    "eslint": "^3.3.1",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1",
-    "gulp-mocha": "^2.2.0",
-    "gulp-nsp": "^2.4.2",
     "gulp-rename": "^1.2.2",
+    "mocha": "^3.0.2",
     "node-mocks-http": "^1.5.2",
+    "nsp": "^2.6.1",
     "should": "^9.0.2"
   },
   "dependencies": {

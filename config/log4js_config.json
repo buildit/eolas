@@ -2,8 +2,8 @@
    "appenders": [
       {
       	"type": "dateFile",
-      	"filename": "Eolas.log",
-   	   	"pattern": "-yyyy-MM-dd",
+      	"filename": "eolas.log",
+   	   	"pattern": "-MM-dd",
       	"alwaysIncludePattern": true,
       	"layout": {
           	"type": "pattern",
