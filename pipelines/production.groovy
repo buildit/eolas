@@ -27,10 +27,18 @@ node {
       appUrl = "http://eolas.${domainName}"
 
     stage "Write docker-compose"
+        // global for exception handling
+        tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
+        def tmpFile = UUID.randomUUID().toString() + ".tmp"
+        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag :tag])
+
+        writeFile(file: tmpFile, text: ymlData)
+
+    stage "Write docker-compose"
       // global for exception handling
       tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
-      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, domain_name: domainName])
+      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: 'tag', registry_base: registryBase])
 
       writeFile(file: tmpFile, text: ymlData)
 
@@ -47,7 +55,7 @@ node {
   }
   catch (err) {
     currentBuild.result = "FAILURE"
-    slack.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://media.photobucket.com/user/Keefers_/media/Keffers Animals/evilmonkey.jpg", slackChannel)
+    slack.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
     throw err
   }
 }
