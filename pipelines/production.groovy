@@ -30,7 +30,7 @@ node {
       // global for exception handling
       tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
-      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: 'tag', registry_base: registryBase])
+      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase])
 
       writeFile(file: tmpFile, text: ymlData)
 
@@ -43,7 +43,7 @@ node {
       // wait until the app is deployed
       convox.waitUntilDeployed("${appName}")
       convox.ensureSecurityGroupSet("${appName}", env.CONVOX_SECURITYGROUP)
-      slack.notify("Deployed to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> has been deployed to <${appUrl}|${appUrl}>", "good", "http://i296.photobucket.com/albums/mm200/kingzain/the_eye_of_sauron_by_stirzocular-d86f0oo_zpslnqbwhv2.png", slackChannel)
+      slack.notify("Deployed to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> has been deployed to <${appUrl}|${appUrl}>", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
   }
   catch (err) {
     currentBuild.result = "FAILURE"
