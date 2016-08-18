@@ -18,13 +18,13 @@ node {
       template = load "lib/template.groovy"
 
       def domainName = "${env.MONGO_HOSTNAME}".substring(8)
-      def appName = "synapse"
+      def appName = "eolas"
       def registryBase = "006393696278.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
 
       // global for exception handling
       slackChannel = "synapse"
       gitUrl = "https://bitbucket.org/digitalrigbitbucketteam/synapse"
-      appUrl = "http://synapse.${domainName}"
+      appUrl = "http://eolas.${domainName}"
 
     stage "Write docker-compose"
       // global for exception handling
@@ -36,7 +36,7 @@ node {
 
     stage "Deploy to production"
       sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
-      sh "convox env set NODE_ENV=production MIDAS_API_URL=http://midas-api.${domainName}/ --app ${appName}"
+      sh "convox env set NODE_ENV=production --app ${appName}"
       sh "convox deploy --app ${appName} --description '${tag}' --file ${tmpFile}"
       sh "rm ${tmpFile}"
 

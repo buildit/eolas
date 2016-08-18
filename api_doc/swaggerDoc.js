@@ -11,7 +11,7 @@ const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
 exports.serveDoc = function(req, res) {
-  logger.debug('servce swagger api doc');
+  logger.debug('serve swagger api doc');
   var spec = 'Unable to find api doc.';
   new tryMe ( function(){
     spec = fs.readFileSync(config.get('apiDocFilePath'), 'utf8');

@@ -5,12 +5,12 @@
       "defectItem": "Bug"
    },
    "datastore": {
-     "dbUrl": "mongodb://mongodb.buildit.tools:27017"
+     "dbUrl": "<%= databaseurl %>"
    },
    "server": {
-     "url": "eolas.staging.buildit.tools",
-      "port": 80
+     "url": "<%= serverurl %>",
+      "port": "<%= serverport %>"
    },
    "apiDocFilePath": "./api_doc/swagger.json",
-   "log-level": "INFO"
+   "log-level": "<%= loglevel %>"
 }

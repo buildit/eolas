@@ -4,7 +4,7 @@
   "description": "REST Services in support of the Buildit MI dashboard tools",
   "main": "index.js",
   "scripts": {
-    "build": "gulp",
+    "package": "gulp package",
     "lint": "echo '=> linting' && eslint api_doc/ routes/ services/ test/ test_accept/ *.js",
     "test": "echo '=> testing' && mocha test -R spec",
     "security": "echo '=> nsp testing' && nsp check --output summary",
@@ -12,7 +12,9 @@
     "build": "echo '=> building' && npm run lint && npm run test && npm run security"
   },
   "pre-commit": [
-    "lint", "test", "security"
+    "lint",
+    "test",
+    "security"
   ],
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
     "eslint": "^3.3.1",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "gulp-template": "^4.0.0",
     "mocha": "^3.0.2",
     "node-mocks-http": "^1.5.2",
     "nsp": "^2.6.1",

@@ -36,7 +36,12 @@ node {
         sh "npm install"
 
       stage "Build"
-        sh "NODE_ENV='production' npm run build"
+        sh "NODE_ENV='development' npm run build"
+
+      stage "Package"
+        sh "NODE_ENV='production' DB_URL='mongodb://${env.MONGO_HOSTNAME}:27017' SERVER_URL='${appName}.staging.${domainName}' SERVER_PORT='80' LOG_LEVEL='INFO' npm run package"
+        sh "cd dist"
+        sh "npm install --production"
 
       stage "Docker Image Build"
         def tag = "${version}-${shortCommitHash}-${env.BUILD_NUMBER}"
@@ -61,7 +66,7 @@ node {
         // wait until the app is deployed
         convox.waitUntilDeployed("${appName}-staging")
         convox.ensureSecurityGroupSet("${appName}-staging", env.CONVOX_SECURITYGROUP)
-        sh "NODE_ENV='production' npm run accept"
+        sh "NODE_ENV='test' npm run accept"
 
       stage "Promote Build to latest"
         docker.withRegistry(registry) {

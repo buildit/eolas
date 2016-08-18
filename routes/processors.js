@@ -37,6 +37,7 @@ router.use(methodOverride('X-HTTP-Method-Override')); // Google/GData
 router.use(methodOverride('X-Method-Override'));      // IBM router.use()
 router.use(responseTime());
 router.use(appLogger);
+router.use(log4js.connectLogger(logger, { level: log4js.levels.INFO, format: ':method :url' }));
 router.use(originPolicy);
 router.use(errorHandler.logErrors);
 router.use(errorHandler.clientErrorHandler);
