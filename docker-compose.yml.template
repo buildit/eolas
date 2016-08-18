@@ -1,6 +1,6 @@
 node:
   restart: always
-  build: ./dist
+  build: .
   ports:
     - "80"
   environment:
