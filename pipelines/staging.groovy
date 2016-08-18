@@ -57,11 +57,11 @@ node {
         sh "convox env set NODE_ENV=production --app ${appName}-staging"
         sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile}"
 
-      stage "Run Functional Tests"
+      stage "Run Functional Acceptance Tests"
         // wait until the app is deployed
         convox.waitUntilDeployed("${appName}-staging")
         convox.ensureSecurityGroupSet("${appName}-staging", env.CONVOX_SECURITYGROUP)
-        // run Selenium tests
+        sh "NODE_ENV='test' npm run accept"
 
       stage "Promote Build to latest"
         docker.withRegistry(registry) {

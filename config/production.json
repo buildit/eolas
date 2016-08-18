@@ -8,7 +8,7 @@
      "dbUrl": "mongodb://mongodb.buildit.tools:27017"
    },
    "server": {
-     "url": "eolas.buildit.tools",
+     "url": "eolas.staging.buildit.tools",
       "port": 80
    },
    "apiDocFilePath": "./api_doc/swagger.json",
