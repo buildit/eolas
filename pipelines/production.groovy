@@ -20,6 +20,9 @@ node {
       def domainName = "${env.MONGO_HOSTNAME}".substring(8)
       def appName = "eolas"
       def registryBase = "006393696278.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
+      def mongoHostname = "${env.MONGO_HOSTNAME}"
+      def serverUrl = "${appName}.${domainName}"
+      def serverPort = "80"
 
       // global for exception handling
       slackChannel = "synapse"
@@ -30,7 +33,7 @@ node {
       // global for exception handling
       tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
-      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase])
+      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_hostname: mongoHostname, server_url: serverUrl, server_port: serverPort])
 
       writeFile(file: tmpFile, text: ymlData)
 
