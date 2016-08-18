@@ -23,7 +23,7 @@ node {
 
       // global for exception handling
       slackChannel = "synapse"
-      gitUrl = "https://bitbucket.org/digitalrigbitbucketteam/synapse"
+      gitUrl = "https://bitbucket.org/digitalrigbitbucketteam/eolas"
       appUrl = "http://eolas.${domainName}"
 
     stage "Write docker-compose"
@@ -47,7 +47,7 @@ node {
   }
   catch (err) {
     currentBuild.result = "FAILURE"
-    slack.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i296.photobucket.com/albums/mm200/kingzain/the_eye_of_sauron_by_stirzocular-d86f0oo_zpslnqbwhv2.png", slackChannel)
+    slack.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/\'${tag}\'|\'${tag}\'> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://media.photobucket.com/user/Keefers_/media/Keffers Animals/evilmonkey.jpg", slackChannel)
     throw err
   }
 }
