@@ -27,14 +27,6 @@ node {
       appUrl = "http://eolas.${domainName}"
 
     stage "Write docker-compose"
-        // global for exception handling
-        tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
-        def tmpFile = UUID.randomUUID().toString() + ".tmp"
-        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag :tag])
-
-        writeFile(file: tmpFile, text: ymlData)
-
-    stage "Write docker-compose"
       // global for exception handling
       tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
