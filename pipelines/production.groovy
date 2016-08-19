@@ -31,7 +31,7 @@ node {
 
     stage "Write docker-compose"
       // global for exception handling
-      tag = ui.selectTag(ecr.imageTags(appName, env.AWS_REGION))
+      def tag = "latest" 
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
       def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_hostname: mongoHostname, server_url: serverUrl, server_port: serverPort])
 
