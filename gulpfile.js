@@ -15,9 +15,12 @@ gulp.task('config', ['clean'], () => {
 
   gulp.src('./config/deployment_template.json')
     .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
-    .pipe(rename('default.json'))
-    .pipe(gulp.dest('./dist/config'))
+    .pipe(rename('test.json'))
     .pipe(gulp.dest('./config'));
+  gulp.src('./config/deployment_template.json')
+    .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(rename('default.json'))
+    .pipe(gulp.dest('./dist/config'));
   gulp.src('./config/log4js_config.json')
     .pipe(gulp.dest('./dist/config'));
 });

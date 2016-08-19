@@ -65,7 +65,7 @@ node {
         // wait until the app is deployed
         convox.waitUntilDeployed("${appName}-staging")
         convox.ensureSecurityGroupSet("${appName}-staging", env.CONVOX_SECURITYGROUP)
-        sh "npm run accept"
+        sh "NODE_ENV='acceptance' npm run accept"
 
       stage "Promote Build to latest"
         docker.withRegistry(registry) {

@@ -43,7 +43,7 @@ describe("Testing Deep Ping", function() {
     it("service should respond with configuration data", function () {
       return chakram.get(chakram.get(url + '/ping/deep')
        .then(function (pingResponse) {
-         expect(pingResponse).to.have.json('log-level', 'DEBUG');
+         expect(pingResponse).to.have.json('apiDocFilePath', './api_doc/swagger.json');
        }));
     });
 });
