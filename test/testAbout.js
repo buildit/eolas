@@ -16,7 +16,8 @@ describe('About Controller Tests', function() {
     });
 
     response.on('end', function() {
-      response._getData().should.equal('"echo"');
+      var body = JSON.parse(response._getData());
+      should(body).have.property('datastore');
       done();
     });
 
@@ -27,12 +28,12 @@ describe('About Controller Tests', function() {
     var response = buildResponse();
     var request  = http_mocks.createRequest({
       method: 'GET',
-      url: '/pingDeep',
+      url: '/ping/deep',
     });
 
     response.on('end', function() {
-      var body = JSON.parse(response._getData());
-      should(body).have.property('datastore');
+      var body = response._getData();
+      should(body).have.property('datastoreURL');
       done();
     });
 

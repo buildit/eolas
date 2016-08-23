@@ -12,8 +12,8 @@ describe("Testing Method Override", function() {
     it("POST to ping with a GET should respond with echo", function () {
       return chakram.post(url + '/ping', {'Hello': 'World'}, {headers: {'X-HTTP-Method-Override': 'GET'}})
        .then(function (pingResponse) {
-         var aBody = pingResponse.body;
-         expect(aBody).to.contain('echo');
+         var aBody = JSON.stringify(pingResponse.body);
+         expect(aBody).to.contain('datastore');
        });
     });
 });

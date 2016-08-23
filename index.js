@@ -3,9 +3,9 @@
 const config = require('config');
 const log4js = require('log4js');
 const express = require('express');
-const processors = require('./routes/processors');
+const middleware = require('./routes/processors');
 const about = require('./routes/about');
-const apiDocs = require('./api_doc/swaggerDoc');
+const v1Route = require('./routes/v1');
 
 log4js.configure('./config/log4js_config.json', {});
 const logger = log4js.getLogger();
@@ -13,9 +13,9 @@ logger.setLevel(config.get('log-level'));
 
 const app = express();
 
-app.use('/', processors);
+app.use('/', middleware);
 app.use('/ping', about);
-app.use('/doc', apiDocs.serveDoc);
+app.use('/v1', v1Route);
 
 const port = config.get('server.port');
 app.listen(port, function () {

@@ -5,7 +5,7 @@
         "title": "Eolas",
         "description": "REST based service to provide summarized metrics for visualization and analysis.\n"
     },
-    "host": "eolas.buildit.tools",
+    "host": "localhost",
     "basePath": "/v1",
     "schemes": [
         "http"

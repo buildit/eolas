@@ -1,9 +1,4 @@
 {
-   "jira": {
-      "maxResultCount": 50,
-      "demandItem": "Story",
-      "defectItem": "Bug"
-   },
    "datastore": {
      "dbUrl": "<%= databaseurl %>"
    },
@@ -11,6 +6,5 @@
      "url": "<%= serverurl %>",
       "port": "<%= serverport %>"
    },
-   "apiDocFilePath": "./api_doc/swagger.json",
    "log-level": "<%= loglevel %>"
 }

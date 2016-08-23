@@ -30,20 +30,21 @@ describe("Testing Generic Response Stuff", function() {
 /* eslint-enable no-undef */
 
 describe("Testing Ping", function() {
-    it("service should respond with echo", function () {
+    it("service should respond with configuration data", function () {
       return chakram.get(url + '/ping')
        .then(function (pingResponse) {
-         var aBody = pingResponse.body;
-         expect(aBody).to.contain('echo');
+         var aBody = JSON.stringify(pingResponse.body);
+         expect(aBody).to.contain('datastore');
        });
     });
 });
 
 describe("Testing Deep Ping", function() {
-    it("service should respond with configuration data", function () {
+    it("service should respond with a test of db connectivity", function () {
       return chakram.get(chakram.get(url + '/ping/deep')
        .then(function (pingResponse) {
-         expect(pingResponse).to.have.json('apiDocFilePath', './api_doc/swagger.json');
+         var aBody = JSON.stringify(pingResponse.body);
+         expect(aBody).to.contain('datastoreURL');
        }));
     });
 });

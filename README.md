@@ -51,7 +51,7 @@ It is handy to have console logging on when debugging so add the following into 
 | `npm run lint`      | Run ESLint on all project .js files                                 |
 | `npm run security`  | Run node security check                                             |
 | `npm run test`      | Run unit tests (mocha)                                              |
-| `npm run build`     | Run all of the above                                                |
+| `npm run validate`  | Run all of the above                                                |
 | `npm run accept`    | Run acceptance tests (chakram) - requires the server to be running  |
 
 ## Swagger API

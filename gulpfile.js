@@ -15,7 +15,7 @@ gulp.task('config', ['clean'], () => {
 
   gulp.src('./config/deployment_template.json')
     .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
-    .pipe(rename('test.json'))
+    .pipe(rename('acceptance.json'))
     .pipe(gulp.dest('./config'));
   gulp.src('./config/deployment_template.json')
     .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
