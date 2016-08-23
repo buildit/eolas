@@ -26,6 +26,9 @@ dist
 # Dependency directories
 node_modules
 
+# generated files
+config/acceptance.json
+
 # Optional npm cache directory
 .npm
 

@@ -36,6 +36,8 @@ gulp.task('package', ['clean', 'config'], () => {
   .pipe(gulp.dest('./dist'));
   gulp.src('./package.json')
   .pipe(gulp.dest('./dist'));
+  gulp.src('./npm-shrinkwrap.json')
+  .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('default', ['package']);
