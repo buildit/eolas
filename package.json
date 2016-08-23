@@ -10,7 +10,10 @@
     "security": "echo '=> nsp testing' && nsp check --output summary",
     "shrinkwrap": "echo '=> shrinkwrap' && npm shrinkwrap",
     "test": "echo '=> testing' && mocha test -R spec",
-    "validate": "echo '=> validating Eolas' && npm run lint && npm run test && npm run security"
+    "validate": "echo '=> validating Eolas' && npm run lint && npm run test && npm run security",
+    "preversion": "npm run validate",
+    "version": "git add -A -n -v",
+    "postversion": "git push -n -v && git push -n -v --tags"
   },
   "pre-commit": [
     "validate"

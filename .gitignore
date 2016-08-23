@@ -28,6 +28,7 @@ node_modules
 
 # generated files
 config/acceptance.json
+npm-shrinkwrap.json
 
 # Optional npm cache directory
 .npm
