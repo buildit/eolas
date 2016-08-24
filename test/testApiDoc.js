@@ -11,7 +11,7 @@ describe('Doc Controller Tests', function() {
     var response = buildResponse();
     var request  = http_mocks.createRequest({
       method: 'GET',
-      url: '/v0/doc',
+      url: '/v0/doc'
     });
 
     response.on('end', function() {
@@ -26,7 +26,7 @@ describe('Doc Controller Tests', function() {
     var response = buildResponse();
     var request  = http_mocks.createRequest({
       method: 'GET',
-      url: '/v1/doc',
+      url: '/v1/doc'
     });
 
     response.on('end', function() {

@@ -12,7 +12,7 @@ describe('About Controller Tests', function() {
     var response = buildResponse();
     var request  = http_mocks.createRequest({
       method: 'GET',
-      url: '/ping',
+      url: '/ping'
     });
 
     response.on('end', function() {
@@ -28,7 +28,7 @@ describe('About Controller Tests', function() {
     var response = buildResponse();
     var request  = http_mocks.createRequest({
       method: 'GET',
-      url: '/ping/deep',
+      url: '/ping/deep'
     });
 
     response.on('end', function() {

@@ -39,6 +39,7 @@ node {
         sh "NODE_ENV='development' npm run validate"
 
       stage "Package"
+        sh "NODE_ENV='development' npm shrinkwrap"
         sh "NODE_ENV='production' DB_URL='mongodb://${env.MONGO_HOSTNAME}:27017' SERVER_URL='${appName}.staging.${domainName}' SERVER_PORT='80' LOG_LEVEL='INFO' npm run package"
         sh "cd dist; npm install --production"
 
