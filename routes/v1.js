@@ -12,5 +12,8 @@ router.get('/doc', apiDocs.serveDoc);
 
 router.get('/project', project.getProjectSummary);
 router.get('/project/:name', project.getByName);
+router.put('/project/:name', project.updateProjectByName);
+router.post('/project/:name', project.createProjectByName);
+router.delte('/project/:name', project.deleteProjectByName);
 
 module.exports = router;

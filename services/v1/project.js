@@ -41,12 +41,14 @@ exports.getByName = function (req, res) {
     db.close();
 
     if (aProject.length < 1) {
+      logger.debug("getProjectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
       res.send('Unable to find project' + req.params.name);
     } else {
       res.send(aProject);
     }
   }).catch(function(err) {
+    logger.debug("getProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
     res.send('Unable to find project' + req.params.name);
@@ -148,8 +150,6 @@ exports.deleteProjectByName = function (req, res) {
     var db = yield MongoClient.connect(dbUrl);
     var col = db.collection('project');
     var result = yield col.deleteOne({name: projectName});
-    logger.debug("** RESULT");
-    logger.debug(result);
     db.close();
     if (result.deletedCount > 0) {
       res.status(HttpStatus.OK);

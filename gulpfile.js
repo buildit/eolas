@@ -19,7 +19,11 @@ gulp.task('config', ['clean'], () => {
     .pipe(gulp.dest('./config'));
   gulp.src('./config/deployment_template.json')
     .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
-    .pipe(rename('default.json'))
+    .pipe(rename('staging.json'))
+    .pipe(gulp.dest('./dist/config'));
+  gulp.src('./config/deployment_template.json')
+    .pipe(template({ databaseurl: `${databaseURL}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(rename('production.json'))
     .pipe(gulp.dest('./dist/config'));
   gulp.src('./config/log4js_config.json')
     .pipe(gulp.dest('./dist/config'));

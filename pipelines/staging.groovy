@@ -59,7 +59,7 @@ node {
         writeFile(file: tmpFile, text: ymlData)
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
-        sh "convox env set NODE_ENV=production --app ${appName}-staging"
+        sh "convox env set NODE_ENV=staging --app ${appName}-staging"
         sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile}"
 
       stage "Run Functional Acceptance Tests"
