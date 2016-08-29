@@ -30,11 +30,11 @@ gulp.task('config', ['clean'], () => {
 });
 
 gulp.task('package', ['clean', 'config'], () => {
-  gulp.src('./api_doc/*.*')
+  gulp.src('./api_doc/**/*.json')
   .pipe(gulp.dest('./dist/api_doc'));
   gulp.src('./routes/*.js')
   .pipe(gulp.dest('./dist/routes'));
-  gulp.src('./services/*.js')
+  gulp.src('./services/**/*.js')
   .pipe(gulp.dest('./dist/services'));
   gulp.src('./index.js')
   .pipe(gulp.dest('./dist'));
