@@ -18,6 +18,9 @@ node {
         def registryBase = "006393696278.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
         def registry = "https://${registryBase}"
         def appName = "eolas"
+        def mongoUrl = "mongodb://${env.MONGO_HOSTNAME}:27017"
+        def serverUrl = "${appName}.staging.${domainName}"
+        def serverPort = "80"
 
         // global for exception handling
         slackChannel = "synapse"
@@ -40,7 +43,7 @@ node {
 
       stage "Package"
         sh "NODE_ENV='development' npm shrinkwrap"
-        sh "NODE_ENV='production' DB_URL='mongodb://${env.MONGO_HOSTNAME}:27017' SERVER_URL='${appName}.staging.${domainName}' SERVER_PORT='80' LOG_LEVEL='INFO' npm run package"
+        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
         sh "cd dist; npm install --production"
 
       stage "Docker Image Build"
@@ -55,7 +58,7 @@ node {
 
       stage "Deploy To AWS"
         def tmpFile = UUID.randomUUID().toString() + ".tmp"
-        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_hostname: mongoHostname, server_url: serverUrl, server_port: serverPort])
+        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
         writeFile(file: tmpFile, text: ymlData)
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"

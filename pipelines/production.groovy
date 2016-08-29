@@ -20,7 +20,7 @@ node {
       def domainName = "${env.MONGO_HOSTNAME}".substring(8)
       def appName = "eolas"
       def registryBase = "006393696278.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
-      def mongoHostname = "${env.MONGO_HOSTNAME}"
+      def mongoUrl = "mongodb://${env.MONGO_HOSTNAME}:27017"
       def serverUrl = "${appName}.${domainName}"
       def serverPort = "80"
 
@@ -33,7 +33,7 @@ node {
       // global for exception handling
       def tag = "latest"
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
-      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_hostname: mongoHostname, server_url: serverUrl, server_port: serverPort])
+      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
 
       writeFile(file: tmpFile, text: ymlData)
 
