@@ -55,7 +55,7 @@ node {
 
       stage "Deploy To AWS"
         def tmpFile = UUID.randomUUID().toString() + ".tmp"
-        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, domain_name: domainName])
+        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_hostname: mongoHostname, server_url: serverUrl, server_port: serverPort])
         writeFile(file: tmpFile, text: ymlData)
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
