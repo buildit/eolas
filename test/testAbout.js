@@ -1,18 +1,17 @@
 const about = require('../services/about');
-const http_mocks = require('node-mocks-http');
+const HttpMocks = require('node-mocks-http');
 const should = require('should');
 
 function buildResponse() {
-  return http_mocks.createResponse({eventEmitter: require('events').EventEmitter})
+  return HttpMocks.createResponse({eventEmitter: require('events').EventEmitter})
 }
 
 describe('About Controller Tests', function() {
 
   it('Test Ping', function(done) {
     var response = buildResponse();
-    var request  = http_mocks.createRequest({
-      method: 'GET',
-      url: '/ping'
+    var request  = HttpMocks.createRequest({
+      method: 'GET'
     });
 
     response.on('end', function() {
@@ -26,9 +25,8 @@ describe('About Controller Tests', function() {
 
   it('Test DeepPing', function(done) {
     var response = buildResponse();
-    var request  = http_mocks.createRequest({
-      method: 'GET',
-      url: '/ping/deep'
+    var request  = HttpMocks.createRequest({
+      method: 'GET'
     });
 
     response.on('end', function() {

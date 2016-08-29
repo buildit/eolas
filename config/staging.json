@@ -1,0 +1,10 @@
+{
+   "datastore": {
+     "dbUrl": "mongodb://mongodb.buildit.tools:27017"
+   },
+   "server": {
+     "url": "eolas.staging.buildit.tools",
+      "port": "80"
+   },
+   "log-level": "DEBUG"
+}

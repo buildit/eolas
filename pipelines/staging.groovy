@@ -36,7 +36,7 @@ node {
         sh "npm install"
 
       stage "Build"
-        sh "NODE_ENV='development' npm run validate"
+        sh "NODE_ENV='staging' npm run validate"
 
       stage "Package"
         sh "NODE_ENV='development' npm shrinkwrap"

@@ -78,6 +78,194 @@
                     }
                 }
             }
+        },
+        "/project": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Provides an array of project data in summary form.\n",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "project",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/<name>": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Provides a complete project object.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "project",
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "create a project\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful creation of a project",
+                        "schema": {
+                            "title": "url",
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "The project named in the parameter does not match the project name in the body of the request.",
+                        "schema": {
+                            "title": "url",
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Project already exists.  Duplicates not allowed.",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Update an existing.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "url",
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "The project named in the parameter does not match the project name in the body of the request.",
+                        "schema": {
+                            "title": "url",
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Project does not exist, and thus cannot be updated.",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Provides a complete project object.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "OK",
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            }
         }
     }
 }
