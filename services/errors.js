@@ -27,3 +27,10 @@ exports.catchAllHandler = function(err, req, res, next) {
   res.status(500).send({ error: 'Service unable to respond, please verify the service is running' });
 }
 /* eslint-enable no-unused-vars */
+
+/* eslint-disable no-unused-vars */
+exports.errorBody = function(code, description) {
+  var errorBody = {error: { statusCode: code, message: description}};
+  return (errorBody);
+}
+/* eslint-enable no-unused-vars */

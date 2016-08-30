@@ -2,6 +2,7 @@
 
 const co = require('co');
 const config = require('config');
+const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
 const log4js = require('log4js');
 const MongoClient = require('mongodb');
@@ -25,7 +26,7 @@ exports.getProjectSummary = function (req, res) {
   }).catch(function(err) {
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send('Error retrieving project list');
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
   });
 };
 
@@ -43,7 +44,7 @@ exports.getByName = function (req, res) {
     if (aProject.length < 1) {
       logger.debug("getProjectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send('Unable to find project' + req.params.name);
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project' + req.params.name));
     } else {
       res.send(aProject);
     }
@@ -51,7 +52,7 @@ exports.getByName = function (req, res) {
     logger.debug("getProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send('Unable to find project' + req.params.name);
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project' + req.params.name));
   });
 };
 
@@ -64,10 +65,10 @@ exports.createProjectByName = function (req, res) {
   if (projectName !== project.name) {
     logger.debug("createProjectByName - Missmatched name between URL and BODY");
     res.status(HttpStatus.BAD_REQUEST);
-    res.send(`The project id in the request params
+    res.send(errorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
        does not match the project id in the request body.
        req.params.p_id: ${JSON.stringify(projectName)}
-       req.body.id: project.name`);
+       req.body.id: project.name`));
   } else {
     var dbUrl = config.get('datastore.dbUrl') + "/buildit";
 
@@ -79,7 +80,7 @@ exports.createProjectByName = function (req, res) {
         logger.debug("createProjectByName - Duplicate Resource");
         db.close();
         res.status(HttpStatus.FORBIDDEN);
-        res.send('Project ' + projectName + ' already exists.  Duplicates not permitted');
+        res.send(errorHelper.errorBody(HttpStatus.FORBIDDEN, 'Project ' + projectName + ' already exists.  Duplicates not permitted'));
       }
       var result = yield col.insertOne(project);
       db.close();
@@ -91,13 +92,13 @@ exports.createProjectByName = function (req, res) {
       } else {
         logger.debug("createProjectByName - Project was not created" + projectName);
         res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        res.send('Project ' + projectName + ' unable to create.');
+        res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create' + projectName));
       }
     }).catch(function(err) {
       logger.debug("createProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send('Unable to create project' + req.params.name);
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to create project' + req.params.name));
     });
   }
 };
@@ -111,10 +112,10 @@ exports.updateProjectByName = function (req, res) {
   if (projectName !== project.name) {
     logger.debug("updateProjectByName - Missmatched name between URL and BODY");
     res.status(HttpStatus.BAD_REQUEST);
-    res.send(`The project id in the request params
+    res.send(errorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
        does not match the project id in the request body.
        req.params.p_id: ${JSON.stringify(projectName)}
-       req.body.id: project.name`);
+       req.body.id: project.name`));
   } else {
     var dbUrl = config.get('datastore.dbUrl') + "/buildit";
 
@@ -129,13 +130,13 @@ exports.updateProjectByName = function (req, res) {
       } else {
         logger.debug("updateProjectByName - Project doesn't exist " + projectName);
         res.status(HttpStatus.NOT_FOUND);
-        res.send('Project ' + projectName + ' does not exist.  Cannot update.');
+        res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot update.'));
       }
     }).catch(function(err) {
       logger.debug("updateProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send('Unable to update project' + req.params.name);
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to update project' + req.params.name));
     });
   }
 };
@@ -157,12 +158,12 @@ exports.deleteProjectByName = function (req, res) {
     } else {
       logger.debug("deleteProjectByName - Project doesn't exist " + projectName);
       res.status(HttpStatus.NOT_FOUND);
-      res.send('Project ' + projectName + ' does not exist.  Cannot Delete.');
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot Delete.'));
     }
   }).catch(function(err) {
     logger.debug("deleteProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send('Unable to delete project' + req.params.name);
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project' + req.params.name));
   });
 };

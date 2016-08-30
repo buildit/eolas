@@ -34,7 +34,9 @@
     "node-mocks-http": "^1.5.2",
     "nsp": "^2.6.1",
     "should": "^9.0.2",
-    "shrinkwrap": "^0.4.0"
+    "shrinkwrap": "^0.4.0",
+    "sinon": "^1.17.5",
+    "sinon-as-promised": "^4.0.2"
   },
   "dependencies": {
     "body-parser": "^1.15.1",

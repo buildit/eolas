@@ -64,6 +64,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.FORBIDDEN);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.FORBIDDEN);
       done();
     });
 
@@ -89,6 +91,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.BAD_REQUEST);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.BAD_REQUEST);
       done();
     });
 
@@ -135,6 +139,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.NOT_FOUND);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.NOT_FOUND);
       done();
     });
 
@@ -185,6 +191,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.NOT_FOUND);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.NOT_FOUND);
       done();
     });
 
@@ -210,6 +218,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.BAD_REQUEST);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.BAD_REQUEST);
       done();
     });
 
@@ -238,6 +248,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.NOT_FOUND);
+      var body = response._getData();
+      should(body.error.statusCode).equal(HttpStatus.NOT_FOUND);
       done();
     });
 
