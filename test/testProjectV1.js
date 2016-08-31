@@ -23,6 +23,7 @@ describe('Project Services Tests', function() {
   it('Test Create Project', function(done) {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
+      originalUrl: '/v1/project',
       params: {'name': UNITTESTPROJECT},
       body: {
         name: UNITTESTPROJECT,
@@ -39,6 +40,8 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.CREATED);
+      var body = response._getData();
+      logger.debug(body);
       done();
     });
 

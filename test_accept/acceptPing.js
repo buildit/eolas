@@ -8,8 +8,9 @@ beforeEach(function() {
   url = 'http://' + config.get('server.url') + ':' + config.get('server.port');
 });
 
-/* eslint-disable no-undef */
 describe("Testing Generic Response Stuff", function() {
+  var pingResponse;
+
   before("call ping", function () {
     url = 'http://' + config.get('server.url') + ':' + config.get('server.port');
     pingResponse = chakram.get(url + '/ping');
@@ -27,7 +28,6 @@ describe("Testing Generic Response Stuff", function() {
     expect(pingResponse).to.have.header('Access-Control-Allow-Origin');
   });
 });
-/* eslint-enable no-undef */
 
 describe("Testing Ping", function() {
     it("service should respond with configuration data", function () {

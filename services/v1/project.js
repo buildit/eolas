@@ -44,7 +44,7 @@ exports.getByName = function (req, res) {
     if (aProject.length < 1) {
       logger.debug("getProjectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project' + req.params.name));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + req.params.name));
     } else {
       res.send(aProject);
     }
@@ -52,7 +52,7 @@ exports.getByName = function (req, res) {
     logger.debug("getProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project' + req.params.name));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + req.params.name));
   });
 };
 
@@ -86,19 +86,20 @@ exports.createProjectByName = function (req, res) {
       db.close();
 
       if (result.insertedCount > 0) {
-        logger.debug("createProjectByName - Created");
         res.status(HttpStatus.CREATED);
-        res.send(req.protocol + '//' + req.hostname + req.originalUrl);
+        var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
+        logger.debug("createProjectByName - Created @ " + tmpBody);
+        res.send(tmpBody);
       } else {
         logger.debug("createProjectByName - Project was not created" + projectName);
         res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create' + projectName));
+        res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
       }
     }).catch(function(err) {
       logger.debug("createProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to create project' + req.params.name));
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to create project ' + req.params.name));
     });
   }
 };
@@ -126,7 +127,9 @@ exports.updateProjectByName = function (req, res) {
       db.close();
       if (result.modifiedCount > 0) {
         res.status(HttpStatus.OK);
-        res.send(req.protocol + '//' + req.hostname + req.originalUrl);
+        var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
+        logger.debug("updateProjectByName - Updated @ " + tmpBody);
+        res.send(tmpBody);
       } else {
         logger.debug("updateProjectByName - Project doesn't exist " + projectName);
         res.status(HttpStatus.NOT_FOUND);
@@ -136,7 +139,7 @@ exports.updateProjectByName = function (req, res) {
       logger.debug("updateProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to update project' + req.params.name));
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to update project ' + req.params.name));
     });
   }
 };
@@ -164,6 +167,6 @@ exports.deleteProjectByName = function (req, res) {
     logger.debug("deleteProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project' + req.params.name));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project ' + req.params.name));
   });
 };
