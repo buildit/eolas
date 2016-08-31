@@ -14,7 +14,6 @@ const NOPROJECT = 'ShouldNotExistProject';
 const TESTPORTFOLIO = 'A Portfolio';
 const UPDATEDPORTFOLIO = 'Updated Portfolio';
 
-var url;
 var aProject = {
     name: ACCEPTANCETESTPROJECT,
     program: "Basic Test Data",
@@ -31,7 +30,7 @@ function generateUrl(projectName) {
   var url = 'http://' + config.get('server.url') + ':' + config.get('server.port') + '/v1/project/' + projectName;
   logger.debug(url);
   return url;
-};
+}
 
 
 describe("Testing Create Project ", function() {
@@ -144,7 +143,7 @@ describe("Testing Update Project ", function() {
   });
 
   it("should return the updated portfolio", function () {
-    getResponse = chakram.get(generateUrl(ACCEPTANCETESTPROJECT));
+    var getResponse = chakram.get(generateUrl(ACCEPTANCETESTPROJECT));
     return expect(getResponse).to.have.json(function(projectArray) {
       var aProject = projectArray[0];
       expect(aProject.portfolio).to.equal(UPDATEDPORTFOLIO);
