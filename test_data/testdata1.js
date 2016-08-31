@@ -3,8 +3,7 @@
 const config = require('config');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-
-const BUILDIT_DBNAME = "buildit";
+const utils = require('../util/utils');
 
 // ***************************************
 //
@@ -91,7 +90,7 @@ projectionInfo = {
     effort: effortInfo,
     projection: projectionInfo};
 
-MongoClient.connect(config.get('datastore.dbUrl') + '/' + BUILDIT_DBNAME, function (err, db) {
+MongoClient.connect(utils.dbCorePath(), function (err, db) {
   assert.equal(null, err);
   var col = db.collection('project');
   col.findOneAndReplace(
@@ -229,7 +228,7 @@ var demand = [
   {"projectDate":"2016/11/03","status":{"Backlog":10,"Selected for Development":1,"In Progress":1,"Done":108}}
 ];
 
-  var url = config.get('datastore.dbUrl') + "/" + projects.id;
+  var url = utils.dbProjectPath(projects.name);
 
   MongoClient.connect(url, function (err, db) {
     assert.equal(null, err);

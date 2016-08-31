@@ -6,6 +6,7 @@ const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
 const log4js = require('log4js');
 const MongoClient = require('mongodb');
+const utils = require('../../util/utils');
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
@@ -14,10 +15,8 @@ logger.setLevel(config.get('log-level'));
 exports.getProjectSummary = function (req, res) {
   logger.debug("getProjectSummary");
 
-  var dbUrl = config.get('datastore.dbUrl') + "/buildit";
-
   co(function*() {
-    var db = yield MongoClient.connect(dbUrl);
+    var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var projectList = yield col.find({},
       {_id: 0, name: 1, program: 1, portfolio: 1, status: 1, description: 1}).toArray();
@@ -30,13 +29,11 @@ exports.getProjectSummary = function (req, res) {
   });
 };
 
-exports.getByName = function (req, res) {
+exports.getProjectByName = function (req, res) {
   logger.debug("getProjectByName ");
 
-  var dbUrl = config.get('datastore.dbUrl') + "/buildit";
-
   co(function*() {
-    var db = yield MongoClient.connect(dbUrl);
+    var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var aProject = yield col.find({name: req.params.name}).toArray();
     db.close();
@@ -70,10 +67,8 @@ exports.createProjectByName = function (req, res) {
        req.params.p_id: ${JSON.stringify(projectName)}
        req.body.id: project.name`));
   } else {
-    var dbUrl = config.get('datastore.dbUrl') + "/buildit";
-
     co(function*() {
-      var db = yield MongoClient.connect(dbUrl);
+      var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
       var count = yield col.count({name: projectName});
       if (count > 0) {
@@ -118,10 +113,8 @@ exports.updateProjectByName = function (req, res) {
        req.params.p_id: ${JSON.stringify(projectName)}
        req.body.id: project.name`));
   } else {
-    var dbUrl = config.get('datastore.dbUrl') + "/buildit";
-
     co(function*() {
-      var db = yield MongoClient.connect(dbUrl);
+      var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
       var result = yield col.updateOne({name: projectName}, {$set: project});
       db.close();
@@ -148,10 +141,9 @@ exports.deleteProjectByName = function (req, res) {
   logger.debug("deleteProjectByName");
 
   var projectName = req.params.name;
-  var dbUrl = config.get('datastore.dbUrl') + "/buildit";
 
   co(function*() {
-    var db = yield MongoClient.connect(dbUrl);
+    var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var result = yield col.deleteOne({name: projectName});
     db.close();

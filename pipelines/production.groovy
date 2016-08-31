@@ -33,7 +33,7 @@ node {
       // global for exception handling
       def tag = "latest"
       def tmpFile = UUID.randomUUID().toString() + ".tmp"
-      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
+      def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, db_context: dbContext, server_url: serverUrl, server_port: serverPort])
 
       writeFile(file: tmpFile, text: ymlData)
 

@@ -131,7 +131,7 @@ describe('Project Services Tests', function() {
       done();
     });
 
-    project.getByName(request, response);
+    project.getProjectByName(request, response);
   });
 
   it('Test Getting and error when Project does not exist', function(done) {
@@ -147,7 +147,7 @@ describe('Project Services Tests', function() {
       done();
     });
 
-    project.getByName(request, response);
+    project.getProjectByName(request, response);
   });
 
   it('Test Update Project', function(done) {

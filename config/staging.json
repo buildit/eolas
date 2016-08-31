@@ -1,6 +1,8 @@
 {
    "datastore": {
      "dbUrl": "mongodb://mongodb.buildit.tools:27017"
+     "context": "staging",
+     "rootDB": "buildit"
    },
    "server": {
      "url": "eolas.staging.buildit.tools",

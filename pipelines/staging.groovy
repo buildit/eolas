@@ -21,6 +21,7 @@ node {
         def mongoUrl = "mongodb://${env.MONGO_HOSTNAME}:27017"
         def serverUrl = "${appName}.staging.${domainName}"
         def serverPort = "80"
+        def dbContext = "staging"
 
         // global for exception handling
         slackChannel = "synapse"
@@ -43,7 +44,7 @@ node {
 
       stage "Package"
         sh "NODE_ENV='development' npm shrinkwrap"
-        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
+        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' DB_CONTEXT='${dbContext}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
         sh "cd dist; npm install --production"
 
       stage "Docker Image Build"
@@ -58,7 +59,7 @@ node {
 
       stage "Deploy To AWS"
         def tmpFile = UUID.randomUUID().toString() + ".tmp"
-        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
+        def ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, db_context: dbContext, server_url: serverUrl, server_port: serverPort])
         writeFile(file: tmpFile, text: ymlData)
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"

@@ -11,7 +11,7 @@ router.get('/ping/deep', about.deepPing);
 router.get('/doc', apiDocs.serveDoc);
 
 router.get('/project', project.getProjectSummary);
-router.get('/project/:name', project.getByName);
+router.get('/project/:name', project.getProjectByName);
 router.put('/project/:name', project.updateProjectByName);
 router.post('/project/:name', project.createProjectByName);
 router.delete('/project/:name', project.deleteProjectByName);
