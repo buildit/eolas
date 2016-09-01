@@ -27,10 +27,6 @@ gulp.task('config', ['clean'], () => {
   const logLevel = process.env.LOG_LEVEL || 'INFO';
 
   gulp.src('./config/deployment_template.json')
-    .pipe(template({ databaseurl: `${databaseURL}`, dbcontext: `acceptance`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
-    .pipe(rename('acceptance.json'))
-    .pipe(gulp.dest('./config'));
-  gulp.src('./config/deployment_template.json')
     .pipe(template({ databaseurl: `${databaseURL}`, dbcontext: `staging`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
     .pipe(rename('staging.json'))
     .pipe(gulp.dest('./dist/config'));

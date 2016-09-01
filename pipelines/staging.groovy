@@ -40,12 +40,12 @@ node {
         sh "npm install"
 
       stage "Validation"
-        sh "NODE_ENV='validation' DB_URL='${mongoUrl}' DB_CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
+        sh "NODE_ENV='validation' DB_URL='${mongoUrl}' CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
         sh "NODE_ENV='validation' npm run validate"
 
       stage "Packaging"
         sh "NODE_ENV='development' npm shrinkwrap"
-        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' DB_CONTEXT='${dbContext}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
+        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
         sh "cd dist; npm install --production"
 
       stage "Docker Image Build"
