@@ -119,7 +119,7 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       var body = response._getData();
-      should(body.length).be.above(1);
+      should(body.length).be.above(0);
       should(body[0]).have.property('name');
       should(body[0]).have.property('description');
       done();
