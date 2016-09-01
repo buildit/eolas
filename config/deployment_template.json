@@ -1,6 +1,6 @@
 {
    "datastore": {
-     "dbUrl": "<%= databaseurl %>"
+     "dbUrl": "<%= databaseurl %>",
      "context": "<%= dbcontext %>",
      "rootDB": "buildit"
    },
