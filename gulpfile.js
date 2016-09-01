@@ -46,7 +46,7 @@ gulp.task('package', ['clean', 'config'], () => {
   gulp.src('./services/**/*.js')
   .pipe(gulp.dest('./dist/services'));
   gulp.src('./util/*.js')
-  .pipe(gulp.dest('./dist/routes'));
+  .pipe(gulp.dest('./dist/util'));
   gulp.src('./index.js')
   .pipe(gulp.dest('./dist'));
   gulp.src('./package.json')
