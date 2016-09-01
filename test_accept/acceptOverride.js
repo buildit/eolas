@@ -18,8 +18,9 @@ describe("Testing Method Override", function() {
     });
 });
 
-/* eslint-disable no-undef */
 describe("Testing Failed Override Message", function() {
+  var pingResponse;
+
   before("call DELETE on ping", function () {
       pingResponse = chakram.post(url + '/ping', {'Hello': 'World'}, {headers: {'X-HTTP-Method-Override': 'DELETE'}})
   });
@@ -28,4 +29,3 @@ describe("Testing Failed Override Message", function() {
       return expect(pingResponse).to.have.status(404);
   });
 });
-/* eslint-enable no-undef */

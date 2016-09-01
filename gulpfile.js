@@ -9,7 +9,6 @@ gulp.task('clean', () => (
 
 gulp.task('config', ['clean'], () => {
   const databaseURL = process.env.DB_URL || 'mongodb://localhost:27017';
-  const dbContext = process.env.DB_CONTEXT || 'development';
   const serverURL = process.env.SERVER_URL || 'localhost';
   const serverPort = process.env.SERVER_PORT || '80';
   const logLevel = process.env.LOG_LEVEL || 'INFO';

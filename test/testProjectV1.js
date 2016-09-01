@@ -13,6 +13,17 @@ logger.setLevel(config.get('log-level'));
 const UNITTESTPROJECT = 'UnitTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
 
+var A_PROJECT = {
+    name: UNITTESTPROJECT,
+    program: "Basic Test Data",
+    portfolio: "Acceptance Test Data",
+    description: "A set of basic test data to be used to validate behavior of client systems.",
+    startDate: null,
+    endDate: null,
+    demand: [],
+    defect: [],
+    effort: [],
+    projection: {}};
 
 function buildResponse() {
   return HttpMocks.createResponse({eventEmitter: require('events').EventEmitter})
@@ -26,22 +37,20 @@ describe('Project Services Tests', function() {
       originalUrl: '/v1/project',
       params: {'name': UNITTESTPROJECT},
       body: {
-        name: UNITTESTPROJECT,
-        program: "Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: UNITTESTPROJECT,
+          program: "Basic Test Data",
+          portfolio: "Acceptance Test Data",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.CREATED);
-      var body = response._getData();
-      logger.debug(body);
       done();
     });
 
@@ -53,16 +62,16 @@ describe('Project Services Tests', function() {
     var request  = HttpMocks.createRequest({
       params: {'name': UNITTESTPROJECT},
       body: {
-        name: UNITTESTPROJECT,
-        program: "Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: UNITTESTPROJECT,
+          program: "Basic Test Data",
+          portfolio: "Acceptance Test Data",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {
@@ -80,16 +89,16 @@ describe('Project Services Tests', function() {
     var request  = HttpMocks.createRequest({
       params: {'name': NOPROJECT},
       body: {
-        name: UNITTESTPROJECT,
-        program: "Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: UNITTESTPROJECT,
+          program: "Basic Test Data",
+          portfolio: "Acceptance Test Data",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {
@@ -127,7 +136,7 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       var body = response._getData();
-      should(body[0]).have.property('name', UNITTESTPROJECT);
+      should(body).have.property('name', UNITTESTPROJECT);
       done();
     });
 
@@ -151,20 +160,22 @@ describe('Project Services Tests', function() {
   });
 
   it('Test Update Project', function(done) {
+    var updatedProject = A_PROJECT;
+    updatedProject.program = 'OTHER';
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       params: {'name': UNITTESTPROJECT},
       body: {
-        name: UNITTESTPROJECT,
-        program: "UPDATED Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: UNITTESTPROJECT,
+          program: "OTHER",
+          portfolio: "OTHER",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {
@@ -180,16 +191,16 @@ describe('Project Services Tests', function() {
     var request  = HttpMocks.createRequest({
       params: {'name': NOPROJECT},
       body: {
-        name: NOPROJECT,
-        program: "UPDATED Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: NOPROJECT,
+          program: "Basic Test Data",
+          portfolio: "Acceptance Test Data",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {
@@ -207,16 +218,16 @@ describe('Project Services Tests', function() {
     var request  = HttpMocks.createRequest({
       params: {'name': NOPROJECT},
       body: {
-        name: UNITTESTPROJECT,
-        program: "Basic Test Data",
-        portfolio: "Acceptance Test Data",
-        description: "A set of basic test data to be used to validate behavior of client systems.",
-        startDate: null,
-        endDate: null,
-        demand: [],
-        defect: [],
-        effort: [],
-        projection: {}}
+          name: UNITTESTPROJECT,
+          program: "Basic Test Data",
+          portfolio: "Acceptance Test Data",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
     });
 
     response.on('end', function() {

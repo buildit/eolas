@@ -2,6 +2,7 @@ const config = require('config');
 const chakram = require('chakram');
 const expect = chakram.expect;
 const HttpStatus = require('http-status-codes');
+const utils = require('../util/utils');
 
 const log4js = require('log4js');
 
@@ -11,12 +12,12 @@ logger.setLevel(config.get('log-level'));
 
 const ACCEPTANCETESTPROJECT = 'AcceptanceTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
-const TESTPORTFOLIO = 'A Portfolio';
+const TESTPORTFOLIO = 'Original Portfolio';
 const UPDATEDPORTFOLIO = 'Updated Portfolio';
 
-var aProject = {
+var A_PROJECT = {
     name: ACCEPTANCETESTPROJECT,
-    program: "Basic Test Data",
+    program: "Project Resource Acceptance Test",
     portfolio: TESTPORTFOLIO,
     description: "A set of basic test data to be used to validate behavior of client systems.",
     startDate: null,
@@ -26,23 +27,20 @@ var aProject = {
     effort: [],
     projection: {}};
 
-function generateUrl(projectName) {
-  var url = 'http://' + config.get('server.url') + ':' + config.get('server.port') + '/v1/project/' + projectName;
-  logger.debug(url);
-  return url;
-}
-
-
+/* eslint-disable no-unused-vars */
 describe("Testing Create Project ", function() {
   var createResponse;
 
   before("create project", function () {
-//    chakram.delete(generateUrl(ACCEPTANCETESTPROJECT));
-    createResponse = chakram.post(generateUrl(ACCEPTANCETESTPROJECT), aProject);
+    return chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
+    .then( function(deleteResponse) {
+      createResponse = chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    });
   });
 
   after("remove created project", function () {
-//    chakram.delete(generateUrl(ACCEPTANCETESTPROJECT));
+    var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
+    return expect(deleteResponse).to.have.status(HttpStatus.OK);
   });
 
   it("should return 201 on success", function () {
@@ -50,20 +48,25 @@ describe("Testing Create Project ", function() {
   });
 
   it("should return a URL on success", function () {
-      return expect(createResponse).to.have.json('url', 'http://localhost/v1/project/AcceptanceTestProject');
+      return expect(createResponse).to.have.json('url', utils.generatePortlessServiceUrl(ACCEPTANCETESTPROJECT));
   });
 });
+/* eslint-enable no-unused-vars */
 
 describe("Testing Create Duplicate Project ", function() {
   var createResponse;
 
   before("create project", function () {
-//    chakram.post(generateUrl(ACCEPTANCETESTPROJECT), aProject);
-    createResponse = chakram.post(generateUrl(ACCEPTANCETESTPROJECT), aProject);
+    return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    .then( function(postResponse) {
+      expect(postResponse).to.have.status(HttpStatus.CREATED);
+      createResponse = chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    });
   });
 
   after("remove created project", function () {
-//    chakram.delete(generateUrl(ACCEPTANCETESTPROJECT));
+    var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
+    return expect(deleteResponse).to.have.status(HttpStatus.OK);
   });
 
   it("should return FORBIDDEN", function () {
@@ -75,7 +78,7 @@ describe("Testing Create Bad Request Project ", function() {
   var createResponse;
 
   before("create project", function () {
-    createResponse = chakram.post(generateUrl(NOPROJECT), aProject);
+    createResponse = chakram.post(utils.generateServiceUrl(NOPROJECT), A_PROJECT);
   });
 
   it("should return BAD_REQUEST", function () {
@@ -86,33 +89,33 @@ describe("Testing Create Bad Request Project ", function() {
 describe("Testing Get Project ", function() {
   var getResponse;
 
-  before("create project", function () {
-    getResponse = chakram.get(generateUrl(ACCEPTANCETESTPROJECT));
+  before("create and get project", function () {
+    return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    .then( function(postResponse) {
+      expect(postResponse).to.have.status(HttpStatus.CREATED);
+      getResponse = chakram.get(utils.generateServiceUrl(ACCEPTANCETESTPROJECT));
+    });
+  });
+
+  after("remove created project", function () {
+    var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
+    return expect(deleteResponse).to.have.status(HttpStatus.OK);
   });
 
   it("should return 200 on success", function () {
       return expect(getResponse).to.have.status(HttpStatus.OK);
   });
 
-  it("should return a project array with 1 entry", function () {
-    return expect(getResponse).to.have.json(function(projectArray) {
-      expect(projectArray).to.have.length(1)
-    });
-  });
-
   it("should return a project array with the project I asked for", function () {
-    return expect(getResponse).to.have.json(function(projectArray) {
-      var aProject = projectArray[0];
-      expect(aProject.name).to.equal(ACCEPTANCETESTPROJECT);
-    });
+    return expect(getResponse).to.have.json('name', ACCEPTANCETESTPROJECT);
   });
 });
 
 describe("Testing Get a non-existant Project ", function() {
   var getResponse;
 
-  before("create project", function () {
-    getResponse = chakram.get(generateUrl(NOPROJECT));
+  before("get project", function () {
+    getResponse = chakram.get(utils.generateServiceUrl(NOPROJECT));
   });
 
   it("should return not found on success", function () {
@@ -123,15 +126,19 @@ describe("Testing Get a non-existant Project ", function() {
 describe("Testing Update Project ", function() {
   var updateResponse;
 
-  before("create project", function () {
-    var updatedProject = aProject;
-    updatedProject.portfolio = UPDATEDPORTFOLIO;
-//    chakram.post(generateUrl(ACCEPTANCETESTPROJECT), aProject);
-    updateResponse = chakram.put(generateUrl(ACCEPTANCETESTPROJECT), updatedProject);
+  before("create project and update a project", function () {
+    return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    .then( function(postResponse) {
+      expect(postResponse).to.have.status(HttpStatus.CREATED);
+      var updatedProject = JSON.parse(JSON.stringify(A_PROJECT));
+      updatedProject.portfolio = UPDATEDPORTFOLIO;
+      updateResponse = chakram.put(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), updatedProject);
+    });
   });
 
   after("remove created project", function () {
-//    chakram.delete(generateUrl(ACCEPTANCETESTPROJECT));
+    var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
+    return expect(deleteResponse).to.have.status(HttpStatus.OK);
   });
 
   it("should return 200 on success", function () {
@@ -139,16 +146,12 @@ describe("Testing Update Project ", function() {
   });
 
   it("should return a URL on success", function () {
-      return expect(updateResponse).to.have.json('url', 'http://localhost/v1/project/AcceptanceTestProject');
+      return expect(updateResponse).to.have.json('url', utils.generatePortlessServiceUrl(ACCEPTANCETESTPROJECT));
   });
 
   it("should return the updated portfolio", function () {
-    var getResponse = chakram.get(generateUrl(ACCEPTANCETESTPROJECT));
-    return expect(getResponse).to.have.json(function(projectArray) {
-      var aProject = projectArray[0];
-      expect(aProject.portfolio).to.equal(UPDATEDPORTFOLIO);
-    });
-
+    var getResponse = chakram.get(utils.generateServiceUrl(ACCEPTANCETESTPROJECT));
+    return expect(getResponse).to.have.json('portfolio', UPDATEDPORTFOLIO);
   });
 });
 
@@ -156,7 +159,7 @@ describe("Testing Update Bad Request Project ", function() {
   var updateResponse;
 
   before("create project", function () {
-    updateResponse = chakram.put(generateUrl(NOPROJECT), aProject);
+    updateResponse = chakram.put(utils.generateServiceUrl(NOPROJECT), A_PROJECT);
   });
 
   it("should return BAD_REQUEST", function () {
@@ -168,8 +171,11 @@ describe("Testing Delete Project ", function() {
   var deleteResponse;
 
   before("create project", function () {
-//    chakram.post(generateUrl(ACCEPTANCETESTPROJECT), aProject);
-    deleteResponse = chakram.delete(generateUrl(ACCEPTANCETESTPROJECT));
+    return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
+    .then( function(postResponse) {
+      expect(postResponse).to.have.status(HttpStatus.CREATED);
+      deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT));
+    });
   });
 
   it("should return 200 on success", function () {
@@ -181,7 +187,7 @@ describe("Testing Delete non-existant Project ", function() {
   var deleteResponse;
 
   before("create project", function () {
-    deleteResponse = chakram.delete(generateUrl(NOPROJECT));
+    deleteResponse = chakram.delete(utils.generateServiceUrl(NOPROJECT));
   });
 
   it("should return NOT_FOUND on success", function () {

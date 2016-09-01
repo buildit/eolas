@@ -10,3 +10,13 @@ exports.dbProjectPath = function (projectName) {
 exports.dbCorePath = function () {
   return this.dbProjectPath(config.get('datastore.rootDB'));
 };
+
+exports.generateServiceUrl = function (projectName) {
+  var url = 'http://' + config.get('server.url') + ':' + config.get('server.port') + '/v1/project/' + projectName;
+  return url;
+};
+
+exports.generatePortlessServiceUrl = function (projectName) {
+  var url = 'http://' + config.get('server.url') + '/v1/project/' + projectName;
+  return url;
+};

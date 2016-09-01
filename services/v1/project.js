@@ -43,7 +43,7 @@ exports.getProjectByName = function (req, res) {
       res.status(HttpStatus.NOT_FOUND);
       res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + req.params.name));
     } else {
-      res.send(aProject);
+      res.send(aProject[0]);
     }
   }).catch(function(err) {
     logger.debug("getProjectByName - ERROR");
