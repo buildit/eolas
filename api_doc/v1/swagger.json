@@ -28,6 +28,9 @@
         },
         {
             "name": "Demand"
+        },
+        {
+            "name": "Defect"
         }
     ],
     "paths": {
@@ -289,6 +292,45 @@
                         "description": "Successful response",
                         "schema": {
                             "title": "demand",
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/<name>/defect": {
+            "get": {
+                "tags": [
+                    "Defect"
+                ],
+                "description": "Provides the defect resource of a project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "defect",
                             "type": "object"
                         }
                     },

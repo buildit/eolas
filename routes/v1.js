@@ -6,6 +6,7 @@ const about = require('../services/about');
 const apiDocs = require('../services/swaggerDoc');
 const project = require('../services/v1/project');
 const demand = require('../services/v1/demand');
+const defect = require('../services/v1/defect');
 
 router.get('/ping', about.ping);
 router.get('/ping/deep', about.deepPing);
@@ -18,5 +19,6 @@ router.post('/project/:name', project.createProjectByName);
 router.delete('/project/:name', project.deleteProjectByName);
 
 router.get('/project/:name/demand', demand.getDemandByName);
+router.get('/project/:name/defect', defect.getDefectByName);
 
 module.exports = router;

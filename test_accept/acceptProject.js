@@ -106,7 +106,7 @@ describe("Testing Get Project ", function() {
       return expect(getResponse).to.have.status(HttpStatus.OK);
   });
 
-  it("should return a project array with the project I asked for", function () {
+  it("should return the project I asked for", function () {
     return expect(getResponse).to.have.json('name', ACCEPTANCETESTPROJECT);
   });
 });
