@@ -7,6 +7,19 @@ gulp.task('clean', () => (
   del(['dist'])
 ));
 
+gulp.task('gen_config', () => {
+  const databaseURL = process.env.DB_URL || 'mongodb://localhost:27017';
+  const context = process.env.CONTEXT || 'test';
+  const serverURL = process.env.SERVER_URL || 'localhost';
+  const serverPort = process.env.SERVER_PORT || '80';
+  const logLevel = process.env.LOG_LEVEL || 'INFO';
+
+  gulp.src('./config/deployment_template.json')
+    .pipe(template({ databaseurl: `${databaseURL}`, dbcontext: `${context}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(rename(`${context}` + '.json'))
+    .pipe(gulp.dest('./config'));
+});
+
 gulp.task('config', ['clean'], () => {
   const databaseURL = process.env.DB_URL || 'mongodb://localhost:27017';
   const serverURL = process.env.SERVER_URL || 'localhost';

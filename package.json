@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "accept": "echo '=> accept' && mocha test_accept -R spec",
+    "genConfig": "echo '=> generating local config file' && gulp gen_config",
     "lint": "echo '=> linting' && eslint api_doc/ routes/ services/ test/ test_accept/ *.js",
     "package": "echo '=> packaging for deployment' && gulp package",
     "security": "echo '=> nsp testing' && nsp check --output summary",
