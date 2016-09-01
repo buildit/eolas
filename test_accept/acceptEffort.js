@@ -10,33 +10,31 @@ const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
 const ACCEPTANCETESTPROJECT = 'AcceptanceTestProject';
-const TESTPORTFOLIO = 'A Portfolio';
 
-var DEMANDSEQUENCE = [];
-DEMANDSEQUENCE.push({sequence: 1, name: "Start"});
-DEMANDSEQUENCE.push({sequence: 2, name: "Done"});
-var DEMANDINFO = {
-  source: "Excel",
+var ROLENAMES = [];
+ROLENAMES.push({name: "Build", groupWith: null});
+ROLENAMES.push({name: "Test", groupWith: null});
+var EFFORTINFO = {
   url: "",
   project: ACCEPTANCETESTPROJECT,
   authPolicy: "None",
   userData: "",
-  flow: DEMANDSEQUENCE};
+  role: ROLENAMES};
 
 var A_PROJECT = {
     name: ACCEPTANCETESTPROJECT,
-    program: "Demand Resource Acceptance Test",
-    portfolio: TESTPORTFOLIO,
+    program: "Effort Resource Acceptance Test",
+    portfolio: "Portfolio",
     description: "A set of basic test data to be used to validate behavior of client systems.",
     startDate: null,
     endDate: null,
-    demand: DEMANDINFO,
+    demand: {},
     defect: {},
-    effort: {},
+    effort: EFFORTINFO,
     projection: {}};
 
-describe("Testing GET of Project Demand ", function () {
-  it("Create a project and then get the demand (and then clean up)", function () {
+describe("Testing GET of Project Effort ", function () {
+  it("Create a project and then get the effort (and then clean up)", function () {
     return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
     .then(function (createResponse) {
       expect(createResponse).to.have.status(HttpStatus.CREATED);

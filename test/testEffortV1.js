@@ -1,6 +1,6 @@
 const HttpMocks = require('node-mocks-http');
 const HttpStatus = require('http-status-codes');
-const defect = require('../services/v1/defect');
+const effort = require('../services/v1/effort');
 const project = require('../services/v1/project');
 const should = require('should');
 
@@ -14,23 +14,21 @@ logger.setLevel(config.get('log-level'));
 const UNITTESTPROJECT = 'UnitTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
 
-var DEFECTSEVERITY = [];
-DEFECTSEVERITY.push({sequence: 1, name: "Critical", groupWith: 2});
-DEFECTSEVERITY.push({sequence: 2, name: "Major", groupWith: 1});
-var DEFECTINFO = {
+var ROLENAMES = [];
+ROLENAMES.push({name: "Build", groupWith: null});
+ROLENAMES.push({name: "Test", groupWith: null});
+var EFFORTINFO = {
   url: "",
   project: UNITTESTPROJECT,
   authPolicy: "None",
   userData: "",
-  entryState: "Open",
-  exitState: "Resolved",
-  severity: DEFECTSEVERITY};
+  role: ROLENAMES};
 
 function buildResponse() {
   return HttpMocks.createResponse({eventEmitter: require('events').EventEmitter})
 }
 
-describe('Defect Configuration Services Tests', function() {
+describe('Demand Configuration Services Tests', function() {
 
   before('Create Test Project', function(done) {
     var response = buildResponse();
@@ -45,8 +43,8 @@ describe('Defect Configuration Services Tests', function() {
           startDate: null,
           endDate: null,
           demand: {},
-          defect: DEFECTINFO,
-          effort: {},
+          defect: {},
+          effort: EFFORTINFO,
           projection: {}}
     });
 
@@ -73,7 +71,7 @@ describe('Defect Configuration Services Tests', function() {
   });
 
 
-  it('Test Get Project Defect', function(done) {
+  it('Test Get Project Effort', function(done) {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       params: {'name': UNITTESTPROJECT}
@@ -82,14 +80,14 @@ describe('Defect Configuration Services Tests', function() {
     response.on('end', function() {
       should(response.statusCode).equal(HttpStatus.OK);
       var body = response._getData();
-      should(body.defect).have.property('project', UNITTESTPROJECT);
+      should(body.effort).have.property('project', UNITTESTPROJECT);
       done();
     });
 
-    defect.getDefectByName(request, response);
+    effort.getEffortByName(request, response);
   });
 
-  it('Test getting Defect and error when Project does not exist', function(done) {
+  it('Test getting Demand and error when Project does not exist', function(done) {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       params: {'name': NOPROJECT}
@@ -102,6 +100,6 @@ describe('Defect Configuration Services Tests', function() {
       done();
     });
 
-    defect.getDefectByName(request, response);
+    effort.getEffortByName(request, response);
   });
 });
