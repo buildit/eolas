@@ -34,6 +34,9 @@
         },
         {
             "name": "Effort"
+        },
+        {
+            "name": "Projection"
         }
     ],
     "paths": {
@@ -112,7 +115,7 @@
                 }
             }
         },
-        "/project/<name>": {
+        "/project/{name}": {
             "get": {
                 "tags": [
                     "Project"
@@ -121,8 +124,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -158,8 +162,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -202,8 +207,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -246,8 +252,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -276,7 +283,7 @@
                 }
             }
         },
-        "/project/<name>/demand": {
+        "/project/{name}/demand": {
             "get": {
                 "tags": [
                     "Demand"
@@ -285,8 +292,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -315,7 +323,7 @@
                 }
             }
         },
-        "/project/<name>/defect": {
+        "/project/{name}/defect": {
             "get": {
                 "tags": [
                     "Defect"
@@ -324,8 +332,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -354,7 +363,7 @@
                 }
             }
         },
-        "/project/<name>/effort": {
+        "/project/{name}/effort": {
             "get": {
                 "tags": [
                     "Effort"
@@ -363,8 +372,9 @@
                 "parameters": [
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "path",
                         "type": "string",
+                        "required": true,
                         "description": "The name of the Project to act upon."
                     }
                 ],
@@ -375,6 +385,80 @@
                             "title": "effort",
                             "type": "object"
                         }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/{name}/projection": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Provides the projection resource of a project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "projection",
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "title": "error",
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Update the projection resource of a project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
                     },
                     "404": {
                         "description": "Project was not found",

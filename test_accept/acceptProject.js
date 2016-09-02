@@ -10,7 +10,7 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const ACCEPTANCETESTPROJECT = 'AcceptanceTestProject';
+const ACCEPTANCETESTPROJECT = 'ProjectAcceptanceTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
 const TESTPORTFOLIO = 'Original Portfolio';
 const UPDATEDPORTFOLIO = 'Updated Portfolio';

@@ -9,7 +9,8 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const ACCEPTANCETESTPROJECT = 'AcceptanceTestProject';
+const ACCEPTANCETESTPROJECT = 'EffortAcceptanceTestProject';
+const NOPROJECT = 'ShouldNotExistProject';
 
 var ROLENAMES = [];
 ROLENAMES.push({name: "Build", groupWith: null});
@@ -38,7 +39,7 @@ describe("Testing GET of Project Effort ", function () {
     return chakram.post(utils.generateServiceUrl(ACCEPTANCETESTPROJECT), A_PROJECT)
     .then(function (createResponse) {
       expect(createResponse).to.have.status(HttpStatus.CREATED);
-      return chakram.get(utils.generateServiceUrl(ACCEPTANCETESTPROJECT) + '/demand');
+      return chakram.get(utils.generateServiceUrl(ACCEPTANCETESTPROJECT) + '/effort');
     })
     .then("now get the demand", function (getResponse) {
       expect(getResponse).to.have.status(HttpStatus.OK);
@@ -49,5 +50,17 @@ describe("Testing GET of Project Effort ", function () {
   after("Clean Up", function () {
     var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
     return expect(deleteResponse).to.have.status(HttpStatus.OK);
+  });
+});
+
+describe("Testing Get Projection for a non-existant Project ", function() {
+  var getResponse;
+
+  before("get projection", function () {
+    getResponse = chakram.get(utils.generateServiceUrl(NOPROJECT) + '/effort');
+  });
+
+  it("should return not found on success", function () {
+      return expect(getResponse).to.have.status(HttpStatus.NOT_FOUND);
   });
 });

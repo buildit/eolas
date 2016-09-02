@@ -11,7 +11,7 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const UNITTESTPROJECT = 'UnitTestProject';
+const UNITTESTPROJECT = 'DefectUnitTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
 
 var DEFECTSEVERITY = [];
@@ -39,8 +39,8 @@ describe('Defect Configuration Services Tests', function() {
       params: {'name': UNITTESTPROJECT},
       body: {
           name: UNITTESTPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Defect Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,

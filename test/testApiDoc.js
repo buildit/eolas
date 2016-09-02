@@ -5,7 +5,7 @@ function buildResponse() {
   return HttpMocks.createResponse({eventEmitter: require('events').EventEmitter})
 }
 
-describe('Doc Controller Tests', function() {
+describe('Swagger Doc Controller Tests', function() {
 
   it('Test Doc Not Found', function(done) {
     var response = buildResponse();

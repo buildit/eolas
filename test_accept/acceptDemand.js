@@ -9,7 +9,8 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const ACCEPTANCETESTPROJECT = 'AcceptanceTestProject';
+const ACCEPTANCETESTPROJECT = 'DemandAcceptanceTestProject';
+const NOPROJECT = 'ShouldNotExistProject';
 const TESTPORTFOLIO = 'A Portfolio';
 
 var DEMANDSEQUENCE = [];
@@ -51,5 +52,17 @@ describe("Testing GET of Project Demand ", function () {
   after("Clean Up", function () {
     var deleteResponse = chakram.delete(utils.generateServiceUrl(ACCEPTANCETESTPROJECT))
     return expect(deleteResponse).to.have.status(HttpStatus.OK);
+  });
+});
+
+describe("Testing Get Projection for a non-existant Project ", function() {
+  var getResponse;
+
+  before("get projection", function () {
+    getResponse = chakram.get(utils.generateServiceUrl(NOPROJECT) + '/demand');
+  });
+
+  it("should return not found on success", function () {
+      return expect(getResponse).to.have.status(HttpStatus.NOT_FOUND);
   });
 });

@@ -10,13 +10,13 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const UNITTESTPROJECT = 'UnitTestProject';
+const UNITTESTPROJECT = 'ProjectUnitTestProject';
 const NOPROJECT = 'ShouldNotExistProject';
 
 var A_PROJECT = {
     name: UNITTESTPROJECT,
-    program: "Basic Test Data",
-    portfolio: "Acceptance Test Data",
+    program: "Project Test Data",
+    portfolio: "Unit Test Data",
     description: "A set of basic test data to be used to validate behavior of client systems.",
     startDate: null,
     endDate: null,
@@ -38,8 +38,8 @@ describe('Project Services Tests', function() {
       params: {'name': UNITTESTPROJECT},
       body: {
           name: UNITTESTPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Project Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
@@ -63,8 +63,8 @@ describe('Project Services Tests', function() {
       params: {'name': UNITTESTPROJECT},
       body: {
           name: UNITTESTPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Project Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
@@ -90,8 +90,8 @@ describe('Project Services Tests', function() {
       params: {'name': NOPROJECT},
       body: {
           name: UNITTESTPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Project Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
@@ -160,7 +160,7 @@ describe('Project Services Tests', function() {
   });
 
   it('Test Update Project', function(done) {
-    var updatedProject = A_PROJECT;
+    var updatedProject = JSON.parse(JSON.stringify(A_PROJECT));
     updatedProject.program = 'OTHER';
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
@@ -192,8 +192,8 @@ describe('Project Services Tests', function() {
       params: {'name': NOPROJECT},
       body: {
           name: NOPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Project Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
@@ -219,8 +219,8 @@ describe('Project Services Tests', function() {
       params: {'name': NOPROJECT},
       body: {
           name: UNITTESTPROJECT,
-          program: "Basic Test Data",
-          portfolio: "Acceptance Test Data",
+          program: "Project Test Data",
+          portfolio: "Unit Test Data",
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
