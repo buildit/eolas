@@ -20,3 +20,11 @@ exports.generatePortlessServiceUrl = function (projectName) {
   var url = 'http://' + config.get('server.url') + '/v1/project/' + projectName;
   return url;
 };
+
+exports.createBasicAuthHeader = function(encodedUser) {
+  var headers = {
+  	'Authorization': 'Basic ' +  encodedUser,
+  	'Accept':'application/json',
+  	'Content-Type':'application/json'};
+  return headers;
+}

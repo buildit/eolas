@@ -526,7 +526,6 @@
                 "program",
                 "portfolio",
                 "description",
-                "status",
                 "startDate",
                 "endDate",
                 "externalReference"
@@ -547,10 +546,6 @@
                 "description": {
                     "type": "string",
                     "example": "This is a sample project summary"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "Active"
                 },
                 "startDate": {
                     "type": "string",

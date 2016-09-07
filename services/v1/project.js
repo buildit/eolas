@@ -76,19 +76,20 @@ exports.createProjectByName = function (req, res) {
         db.close();
         res.status(HttpStatus.FORBIDDEN);
         res.send(errorHelper.errorBody(HttpStatus.FORBIDDEN, 'Project ' + projectName + ' already exists.  Duplicates not permitted'));
-      }
-      var result = yield col.insertOne(project);
-      db.close();
-
-      if (result.insertedCount > 0) {
-        res.status(HttpStatus.CREATED);
-        var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
-        logger.debug("createProjectByName - Created @ " + tmpBody);
-        res.send(tmpBody);
       } else {
-        logger.debug("createProjectByName - Project was not created" + projectName);
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
+        var result = yield col.insertOne(project);
+        db.close();
+
+        if (result.insertedCount > 0) {
+          res.status(HttpStatus.CREATED);
+          var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
+          logger.debug("createProjectByName - Created @ " + tmpBody);
+          res.send(tmpBody);
+        } else {
+          logger.debug("createProjectByName - Project was not created" + projectName);
+          res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+          res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
+        }
       }
     }).catch(function(err) {
       logger.debug("createProjectByName - ERROR");

@@ -8,5 +8,9 @@
       "url": "localhost",
       "port": 6565
    },
+   "projectSource": {
+     "url": "https://builditglobal.harvestapp.com/",
+     "encodedUser": "cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"
+   },
    "log-level": "DEBUG"
 }

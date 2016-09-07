@@ -48,7 +48,9 @@
     "log4js": "^0.6.37",
     "method-override": "^2.3.6",
     "mongodb": "^2.2.4",
+    "ramda": "^0.22.1",
     "response-time": "^2.3.1",
+    "restler": "^3.4.0",
     "try": "^0.13.3"
   }
 }
