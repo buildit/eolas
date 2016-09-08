@@ -14,18 +14,19 @@ logger.setLevel(config.get('log-level'));
 
 exports.getDefectByName = function (req, res) {
   logger.debug("getDefectByName");
+  var projectName = decodeURIComponent(req.params.name);
 
   co(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aDefect = yield col.find({name: req.params.name}, {_id: 0, defect: 1}).toArray();
+    var aDefect = yield col.find({name: projectName}, {_id: 0, defect: 1}).toArray();
     db.close();
     logger.debug(JSON.stringify(aDefect));
-    
+
     if (aDefect.length < 1) {
       logger.debug("getDefectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + req.params.name));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + projectName));
     } else {
       res.send(aDefect[0]);
     }
@@ -33,6 +34,6 @@ exports.getDefectByName = function (req, res) {
     logger.debug("getDefectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + req.params.name));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + projectName));
   });
 };

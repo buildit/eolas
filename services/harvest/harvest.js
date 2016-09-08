@@ -73,29 +73,28 @@ const makePretty = ({project}) => ({
 const isBillable = ({project}) => project.billable === true;
 const isActive = ({project}) => project.active === true;
 
-exports.getAvailableProjectList = function(req, res) {
+exports.getAvailableProjectList = function() {
   logger.info('getAvailableProjectList');
 
-  getClientList()
-    .then(function (clients) {
-      getProjectList()
-        .then(function (projects) {
-          projects.forEach(function(aProject) {
-            aProject.portfolio = clients[aProject.portfolio];
+  return new Promise(function (resolve, reject) {
+    getClientList()
+      .then(function (clients) {
+        getProjectList()
+          .then(function (projects) {
+            projects.forEach(function(aProject) {
+              aProject.portfolio = clients[aProject.portfolio];
+            });
+            logger.debug(`total available projects - ${projects.length}`);
+            resolve(projects);
+          })
+          .catch(function (reason) {
+            reject(reason);
           });
-          logger.debug(`total available projects - ${projects.length}`);
-          res.status(HttpStatus.OK);
-          res.send(projects);
-        })
-        .catch(function (reason) {
-          res.status(reason.statusCode);
-          res.send(reason);
-        });
-    })
-    .catch(function (reason) {
-      res.status(reason.statusCode);
-      res.send(reason);
-    });
+      })
+      .catch(function (reason) {
+        reject(reason);
+      });
+  });
 }
 
 
@@ -115,7 +114,7 @@ function getProjectList () {
           reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
         }
 
-        logger.debug(`getAvailableProjectList - ${response.statusCode} reading ${data.length} projects`);
+        logger.debug(`getAvailableProjectList - from Harvest -  ${response.statusCode} reading ${data.length} projects`);
 
         if (data.length < 1) {
           logger.debug('getAvailableProjectList - Not Found');
@@ -127,7 +126,7 @@ function getProjectList () {
             R.map(makePretty)
           )(data);
 
-          logger.debug(`availableProjects - ${availableProjects.length}`);
+          logger.debug(`Billable and Active project count - ${availableProjects.length}`);
 
           if (availableProjects.length < 1) {
             logger.debug('getAvailableProjectList - No Active / Billable projects found');
@@ -162,7 +161,7 @@ function getClientList () {
           reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving client list'));
         }
 
-        logger.debug(`getClientList - ${response.statusCode} reading ${data.length} client`);
+        logger.debug(`getClientList - from Harvest - ${response.statusCode} reading ${data.length} client`);
 
         if (data.length < 1) {
           logger.debug('getClientList - Not Found');
@@ -177,7 +176,8 @@ function getClientList () {
           });
 
           var numClients = Object.keys(availableClients).length
-          logger.debug(`availableClients - ${numClients}`);
+          logger.debug(`Active Client Count - ${numClients}`);
+
           if (numClients < 1) {
             logger.debug('getClientList - No Active clients found');
             reject(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'No clients are availabe at this time.'));
@@ -196,26 +196,3 @@ function getClientList () {
       });
   });
 }
-
-//
-// function loadCustomers() {
-//   logger.info("loadCustomers()");
-//
-//   var harvestURL = config.get('harvest.url') + "clients";
-//   logger.debug("harvestURL:["+harvestURL+"]");
-//
-//   rest.get(harvestURL,
-//     {headers: utils.createBasicAuthHeader(config.get('harvest.encodedUser'))}
-//     ).on('complete', function(data, response) {
-//       logger.info("Success reading " + data.length + " client entries");
-//       if (data.length > 0) {
-//         db.storeCustomers(data);
-//       }
-//     }).on('fail', function(data, response) {
-//         logger.error("FAIL: " + response.statusCode + " MESSAGE " + data.errorMessages);
-//         return;
-//     }).on('error', function(data, response) {
-//         logger.error("ERROR: " + data.message + " / " + response);
-//         return;
-//     });
-// }

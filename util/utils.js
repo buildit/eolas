@@ -11,13 +11,23 @@ exports.dbCorePath = function () {
   return this.dbProjectPath(config.get('datastore.rootDB'));
 };
 
+function generateRootServiceUrl () {
+  var url = `http://${config.get('server.url')}:${config.get('server.port')}/v1/project`;
+  return url;
+};
+
 exports.generateServiceUrl = function (projectName) {
-  var url = 'http://' + config.get('server.url') + ':' + config.get('server.port') + '/v1/project/' + projectName;
+  var url = `${generateRootServiceUrl()}/${encodeURIComponent(projectName)}`;
+  return url;
+};
+
+exports.generateServiceUrlWithQuery = function (queryString) {
+  var url = `${generateRootServiceUrl()}?${queryString}`;
   return url;
 };
 
 exports.generatePortlessServiceUrl = function (projectName) {
-  var url = 'http://' + config.get('server.url') + '/v1/project/' + projectName;
+  var url = `http://${config.get('server.url')}/v1/project/${encodeURIComponent(projectName)}`;
   return url;
 };
 

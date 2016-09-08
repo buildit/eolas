@@ -9,6 +9,7 @@
       "port": 6565
    },
    "projectSource": {
+     "system": "Harvest",
      "url": "https://builditglobal.harvestapp.com/",
      "encodedUser": "cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"
    },

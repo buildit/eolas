@@ -14,17 +14,18 @@ logger.setLevel(config.get('log-level'));
 
 exports.getDemandByName = function (req, res) {
   logger.debug("getDemandByName");
+  var projectName = decodeURIComponent(req.params.name);
 
   co(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aDemand = yield col.find({name: req.params.name}, {_id: 0, demand: 1}).toArray();
+    var aDemand = yield col.find({name: projectName}, {_id: 0, demand: 1}).toArray();
     db.close();
 
     if (aDemand.length < 1) {
       logger.debug("getDemandByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + req.params.name));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + projectName));
     } else {
       res.send(aDemand[0]);
     }
@@ -32,6 +33,6 @@ exports.getDemandByName = function (req, res) {
     logger.debug("getDemandByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + req.params.name));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + projectName));
   });
 };
