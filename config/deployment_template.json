@@ -1,6 +1,6 @@
 {
   "eolas": {
-    "version": "<%= version %>"
+    "version": "<%= eolas_version %>"
   },
   "datastore": {
    "dbUrl": "<%= databaseurl %>",

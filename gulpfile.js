@@ -16,7 +16,7 @@ gulp.task('gen_config', () => {
   const version = process.env.VERSION || 'unknown';
 
   gulp.src('./config/deployment_template.json')
-    .pipe(template({version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `${context}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(template({ eolas_version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `${context}`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
     .pipe(rename(`${context}` + '.json'))
     .pipe(gulp.dest('./config'));
 });
@@ -29,11 +29,11 @@ gulp.task('config', ['clean'], () => {
   const version = process.env.VERSION || 'unknown';
 
   gulp.src('./config/deployment_template.json')
-    .pipe(template({ersion: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `staging`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(template({ eolas_version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `staging`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
     .pipe(rename('staging.json'))
     .pipe(gulp.dest('./dist/config'));
   gulp.src('./config/deployment_template.json')
-    .pipe(template({ersion: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `production`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(template({ eolas_version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `production`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
     .pipe(rename('production.json'))
     .pipe(gulp.dest('./dist/config'));
   gulp.src('./config/log4js_config.json')
