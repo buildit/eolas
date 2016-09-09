@@ -45,7 +45,7 @@ node {
 
       stage "Packaging"
         sh "NODE_ENV='development' npm shrinkwrap"
-        sh "NODE_ENV='staging' DB_URL='${mongoUrl}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
+        sh "NODE_ENV='staging' VERSION='${version}' DB_URL='${mongoUrl}' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='INFO' npm run package"
         sh "cd dist; npm install --production"
 
       stage "Docker Image Build"
