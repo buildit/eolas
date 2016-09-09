@@ -3,7 +3,7 @@
 const config = require('config');
 
 exports.dbProjectPath = function (projectName) {
-  var dbUrl = config.get('datastore.dbUrl') + '/' + config.get('datastore.context') + '-' + projectName;
+  var dbUrl = `${config.get('datastore.dbUrl')}/${config.get('datastore.context')}-${projectName.replace(/\W/g, '')}`;
   return dbUrl;
 };
 

@@ -10,8 +10,8 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-const UNITTESTPROJECT = 'ProjectUnitTestProject';
-const NOPROJECT = 'ShouldNotExistProject';
+const UNITTESTPROJECT = 'Project Unit Test Project';
+const NOPROJECT = 'Should Not Exist Project';
 
 var A_PROJECT = {
     name: UNITTESTPROJECT,
@@ -20,9 +20,9 @@ var A_PROJECT = {
     description: "A set of basic test data to be used to validate behavior of client systems.",
     startDate: null,
     endDate: null,
-    demand: [],
-    defect: [],
-    effort: [],
+    demand: {},
+    defect: {},
+    effort: {},
     projection: {}};
 
 function buildResponse() {
@@ -111,23 +111,6 @@ describe('Project Services Tests', function() {
     project.createProjectByName(request, response);
   });
 
-  it('Test Get Project Summary', function(done) {
-    var response = buildResponse();
-    var request  = HttpMocks.createRequest({
-      method: 'GET'
-    });
-
-    response.on('end', function() {
-      var body = response._getData();
-      should(body.length).be.above(0);
-      should(body[0]).have.property('name');
-      should(body[0]).have.property('description');
-      done();
-    });
-
-    project.getProjectSummary(request, response);
-  });
-
   it('Test Get Project Details', function(done) {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
@@ -136,6 +119,7 @@ describe('Project Services Tests', function() {
 
     response.on('end', function() {
       var body = response._getData();
+      should(body).not.have.property('_id');
       should(body).have.property('name', UNITTESTPROJECT);
       done();
     });

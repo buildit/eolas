@@ -83,6 +83,7 @@ describe('Defect Configuration Services Tests', function() {
       should(response.statusCode).equal(HttpStatus.OK);
       var body = response._getData();
       should(body.defect).have.property('project', UNITTESTPROJECT);
+      should(body).not.have.property('_id');
       done();
     });
 

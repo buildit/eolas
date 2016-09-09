@@ -81,6 +81,7 @@ describe('Effort Configuration Services Tests', function() {
       should(response.statusCode).equal(HttpStatus.OK);
       var body = response._getData();
       should(body.effort).have.property('project', UNITTESTPROJECT);
+      should(body).not.have.property('_id');
       done();
     });
 

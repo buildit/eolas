@@ -1,6 +1,5 @@
 'use strict'
 
-const available = require('./availableProjects');
 const co = require('co');
 const config = require('config');
 const ErrorHelper = require('../errors');
@@ -13,50 +12,20 @@ log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
-exports.getProjectSummary = function (req, res) {
-  if (req.query.status === undefined) {
-    getExistingProjectSummary(req, res);
-  } else if (req.query.status === 'available') {
-      available.getAvailableProjects(req, res);
-  } else {
-    logger.debug(`Unsuported project status - ${req.query.status}`);
-    res.status(HttpStatus.BAD_REQUEST);
-    res.send(ErrorHelper.errorBody(HttpStatus.BAD_REQUEST, `Unsuported project status - ${req.query.status}`));
-  }
-}
-
-function getExistingProjectSummary (req, res) {
-  logger.debug("getProjectSummary");
-
-  co(function*() {
-    var db = yield MongoClient.connect(utils.dbCorePath());
-    var col = db.collection('project');
-    var projectList = yield col.find({},
-      {_id: 0, name: 1, program: 1, portfolio: 1, status: 1, description: 1}).toArray();
-    db.close();
-    res.send(projectList);
-  }).catch(function(err) {
-    logger.error(err);
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
-  });
-}
-
 exports.getProjectByName = function (req, res) {
-  logger.debug("getProjectByName ");
-
   var projectName = decodeURIComponent(req.params.name);
+  logger.debug(`getProjectByName for ${projectName}`);
 
   co(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aProject = yield col.find({name: projectName}).toArray();
+    var aProject = yield col.find({name: projectName}, {_id: 0}).toArray();
     db.close();
 
     if (aProject.length < 1) {
       logger.debug("getProjectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find project ' + projectName));
+      res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project [${projectName}] in ${utils.dbCorePath()}`));
     } else {
       res.send(aProject[0]);
     }

@@ -38,10 +38,10 @@ demandInfo = {
   flow: demandSequence};
 
 defectSeverity = [];
-defectSeverity.push({sequence: 1, name: "Critical", groupWith: 2});
-defectSeverity.push({sequence: 2, name: "Major", groupWith: 1});
-defectSeverity.push({sequence: 3, name: "Minor", groupWith: null});
 defectSeverity.push({sequence: 4, name: "Trivial", groupWith: null});
+defectSeverity.push({sequence: 3, name: "Minor", groupWith: null});
+defectSeverity.push({sequence: 2, name: "Major", groupWith: 1});
+defectSeverity.push({sequence: 1, name: "Critical", groupWith: 2});
 defectInfo = {
   url: "",
   project: "TestData1",
@@ -78,13 +78,12 @@ projectionInfo = {
   }
 
   projects = {
-    id: "TestData1",
-    name: "Test Project",
+    name: "Test Project 1",
     program: "Basic Test Data",
     portfolio: "Acceptance Test Data",
     description: "A set of basic test data to be used to validate behavior of client systems.",
-    startDate: "2016/07/01T00:00:00.000",
-    endDate: "2016/12/01T00:00:00.000",
+    startDate: "2016/07/01",
+    endDate: "2016/12/01",
     demand: demandInfo,
     defect: defectInfo,
     effort: effortInfo,

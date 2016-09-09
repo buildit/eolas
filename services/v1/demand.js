@@ -13,8 +13,8 @@ const logger = log4js.getLogger();
 logger.setLevel(config.get('log-level'));
 
 exports.getDemandByName = function (req, res) {
-  logger.debug("getDemandByName");
   var projectName = decodeURIComponent(req.params.name);
+  logger.debug(`getDemandByName for ${projectName}`);
 
   co(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
