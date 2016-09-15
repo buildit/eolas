@@ -2,6 +2,7 @@
 
 const config = require('config');
 const log4js = require('log4js');
+const HttpStatus = require('http-status-codes');
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
@@ -15,8 +16,9 @@ exports.logErrors = function(err, req, res, next) {
 
 exports.clientErrorHandler = function(err, req, res, next) {
   if (req.xhr) {
-    logger.error("#### A Client error occured \n" + req.xhr);
-    res.status(500).send({ error: 'Service unable to respond, please verify the service is running' });
+    logger.error("**** A Client error occured \n" + req.xhr);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    res.send(this.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'A client error.  Not really sure what happened.  Tell somebody and have a look at the logs.'));
   } else {
     next(err);
   }
@@ -24,7 +26,8 @@ exports.clientErrorHandler = function(err, req, res, next) {
 
 /* eslint-disable no-unused-vars */
 exports.catchAllHandler = function(err, req, res, next) {
-  res.status(500).send({ error: 'Service unable to respond, please verify the service is running' });
+  res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+  res.send(this.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Bad things.  Not really sure what happened.  Tell somebody and have a look at the logs.'));
 }
 /* eslint-enable no-unused-vars */
 

@@ -9,6 +9,6 @@
           	"type": "pattern",
           	"pattern": "[%r] [%h] [%p] - %m"
         	}
-    	}
+      }
     ]
 }

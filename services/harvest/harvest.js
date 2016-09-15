@@ -196,3 +196,42 @@ function getClientList () {
       });
   });
 }
+
+/* eslint-disable no-unused-vars */
+exports.deepPing = function () {
+  logger.debug('pingDeep - Harvest');
+
+  var projectUrl = (config.get('projectSource.url') + 'account/who_am_i');
+
+  return new Promise(function (resolve, reject) {
+    rest.get(projectUrl,
+      {headers: utils.createBasicAuthHeader(config.get('projectSource.encodedUser'))}
+      ).on('success', function(data, response) {
+
+        if (response && response.statusCode !== HttpStatus.OK){
+          logger.error(`FAIL: ${response.statusCode} MESSAGE ${response.statusMessage}`);
+          resolve (generateConnectionInformation(projectUrl, `pingDeep error from Harvest - ${response.statusCode} MESSAGE ${response.statusMessage}`));
+        }
+
+        if (data.length < 1) {
+          logger.debug('pingDeep - Not Found');
+          resolve(generateConnectionInformation(projectUrl, 'pingDeep - no data from Harvest'));
+        } else {
+          resolve(generateConnectionInformation(projectUrl, data.company.name));
+        }
+      }).on('fail', function(data, response) {
+        logger.debug('pingDeep - FAIL');
+        resolve(generateConnectionInformation(projectUrl, `pingDeep error from Harvest - ${response.statusCode} MESSAGE ${data.statusMessage}`));
+      }).on('error', function(data, response) {
+        logger.error('pingDeep - ERROR - data ' + data + ' - response ' + response);
+        logger.error(`pingDeep - ERROR - data ${data} - response ${response}`);
+        resolve(generateConnectionInformation(projectUrl, 'pingDeep error from Harvest - ' + data));
+      });
+  });
+};
+/* eslint-enable no-unused-vars */
+
+function generateConnectionInformation(url, info) {
+  logger.debug(`ProjectStoreURL : ${url} - ProjectStoreInfo: ${info}`);
+  return {ProjectStoreURL : url, ProjectStoreInfo: info};
+}

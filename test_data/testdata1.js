@@ -25,10 +25,10 @@ var projectionInfo = {};
 // ***************************************
 
 demandSequence = [];
-demandSequence.push({sequence: 1, name: "Backlog"});
-demandSequence.push({sequence: 2, name: "Selected for Development"});
-demandSequence.push({sequence: 3, name: "In Progress"});
-demandSequence.push({sequence: 4, name: "Done"});
+demandSequence.push({name: "Backlog", groupWith: null});
+demandSequence.push({name: "Selected for Development", groupWith: null});
+demandSequence.push({name: "In Progress", groupWith: null});
+demandSequence.push({name: "Done", groupWith: null});
 demandInfo = {
   source: "Excel",
   url: "",
@@ -38,10 +38,10 @@ demandInfo = {
   flow: demandSequence};
 
 defectSeverity = [];
-defectSeverity.push({sequence: 4, name: "Trivial", groupWith: null});
-defectSeverity.push({sequence: 3, name: "Minor", groupWith: null});
-defectSeverity.push({sequence: 2, name: "Major", groupWith: 1});
-defectSeverity.push({sequence: 1, name: "Critical", groupWith: 2});
+defectSeverity.push({name: "Trivial", groupWith: null});
+defectSeverity.push({name: "Minor", groupWith: null});
+defectSeverity.push({name: "Major", groupWith: 1});
+defectSeverity.push({name: "Critical", groupWith: 2});
 defectInfo = {
   url: "",
   project: "TestData1",
@@ -67,6 +67,7 @@ effortInfo = {
   role: roleNames};
 
 projectionInfo = {
+     startDate: "2016-07-10",
      iterationLength: 2,
      backlogSize: 175,
      targetVelocity: 20,
@@ -82,8 +83,8 @@ projectionInfo = {
     program: "Basic Test Data",
     portfolio: "Acceptance Test Data",
     description: "A set of basic test data to be used to validate behavior of client systems.",
-    startDate: "2016/07/01",
-    endDate: "2016/12/01",
+    startDate: "2016-07-01",
+    endDate: "2016-12-01",
     demand: demandInfo,
     defect: defectInfo,
     effort: effortInfo,
