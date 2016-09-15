@@ -49,7 +49,7 @@ exports.updateProjectionByName = function (req, res) {
     var col = db.collection('project');
     var result = yield col.updateOne({name: projectName}, {$set: {projection: projection}});
     db.close();
-    if (result.modifiedCount > 0) {
+    if (result.matchedCount > 0) {
       res.status(HttpStatus.OK);
       var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"/projection}';
       logger.debug("updateProjectionByName - Updated @ " + tmpBody);

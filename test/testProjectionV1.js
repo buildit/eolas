@@ -123,4 +123,21 @@ describe('Projection Configuration Services Tests', function() {
     projection.updateProjectionByName(request, response);
   });
 
+  it('Test Update Projection with no changes', function(done) {
+    var updatedProjection = JSON.parse(JSON.stringify(PROJECTIONINFO));
+    updatedProjection.backlogSize = UPDATEDBACKLOG;
+    var response = buildResponse();
+    var request  = HttpMocks.createRequest({
+      params: {'name': UNITTESTPROJECT},
+      body: {updatedProjection}
+    });
+
+    response.on('end', function() {
+      should(response.statusCode).equal(HttpStatus.OK);
+      done();
+    });
+
+    projection.updateProjectionByName(request, response);
+  });
+
 });
