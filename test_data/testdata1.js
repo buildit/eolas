@@ -94,7 +94,7 @@ MongoClient.connect(utils.dbCorePath(), function (err, db) {
   assert.equal(null, err);
   var col = db.collection('project');
   col.findOneAndReplace(
-    {id: projects.id},
+    {name: projects.name},
     projects,
     {upsert: true},
     function (error, doc) {

@@ -38,7 +38,6 @@ exports.getProjectionByName = function (req, res) {
   });
 };
 
-
 exports.updateProjectionByName = function (req, res) {
   logger.debug("updateProjectionByName");
   var projectName = decodeURIComponent(req.params.name);

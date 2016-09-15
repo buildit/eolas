@@ -65,12 +65,12 @@
                 "tags": [
                     "Ping"
                 ],
-                "description": "Verifies the service is functional.  Verifies that all external sources are reachable.\n",
+                "description": "Attempts to connect to external service providers and determine their state.  Will return a collection of objects that represent the path to that external system and some basic information about that system (typically version).  If the system is unreachable, the information will indicate the error encountered while testing the connection.\n",
                 "responses": {
                     "200": {
                         "description": "Successful response",
                         "schema": {
-                            "$ref": "#/definitions/ConnectivityModel"
+                            "$ref": "#/definitions/ExternalSystem"
                         }
                     }
                 }
@@ -480,6 +480,117 @@
                     }
                 }
             }
+        },
+        "/project/{name}/demand/summary": {
+            "get": {
+                "tags": [
+                    "Demand"
+                ],
+                "description": "Provides a dated array.  The array lists the sum of the number of stories in that status on that day.  The status values correspond to the values listed in the demand.flow array for the project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/DemandSummary"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/{name}/defect/summary": {
+            "get": {
+                "tags": [
+                    "Defect"
+                ],
+                "description": "Provides a dated array.  The array lists the sum of the number of active defects in that severity on that day.  The severity values correspond to the values listed in the defect.severity array for the project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/DefectSummary"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/{name}/effort/summary": {
+            "get": {
+                "tags": [
+                    "Effort"
+                ],
+                "description": "Provides a dated array.  The array lists the sum of the number of people booking time to the project, seperated by role.  The effort values correspond to the values listed in the effort.role array for the project.\n",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "type": "string",
+                        "required": true,
+                        "description": "The name of the Project to act upon."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/EffortSummary"
+                        }
+                    },
+                    "404": {
+                        "description": "Project was not found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -498,7 +609,28 @@
                 }
             }
         },
-        "ConnectivityModel": {
+        "ExternalSystem": {
+            "type": "object",
+            "required": [
+                "externalSystemName",
+                "externalSystemInformation"
+            ],
+            "properties": {
+                "externalSystemName": {
+                    "type": "string",
+                    "example": {
+                        "data store url": "DataStore"
+                    }
+                },
+                "externalSystemInformation": {
+                    "type": "object",
+                    "items": {
+                        "$ref": "#/definitions/ExternalInformation"
+                    }
+                }
+            }
+        },
+        "ExternalInformation": {
             "type": "object",
             "required": [
                 "externalSystemPath",
@@ -873,6 +1005,117 @@
                 "endVelocity": {
                     "type": "integer",
                     "example": 10
+                }
+            }
+        },
+        "DemandSummary": {
+            "type": "object",
+            "required": [
+                "projectDate",
+                "status"
+            ],
+            "properties": {
+                "projectDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-03-01T00:00:00.000Z"
+                },
+                "status": {
+                    "type": "object",
+                    "items": {
+                        "$ref": "#/definitions/DemandSummaryEntry"
+                    }
+                }
+            }
+        },
+        "DemandSummaryEntry": {
+            "type": "object",
+            "required": [
+                "storyStatus",
+                "count"
+            ],
+            "properties": {
+                "storyStatus": {
+                    "type": "string",
+                    "example": "Backlog"
+                },
+                "count": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "DefectSummary": {
+            "type": "object",
+            "required": [
+                "projectDate",
+                "severity"
+            ],
+            "properties": {
+                "projectDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-03-01T00:00:00.000Z"
+                },
+                "severity": {
+                    "type": "object",
+                    "items": {
+                        "$ref": "#/definitions/DefectSummaryEntry"
+                    }
+                }
+            }
+        },
+        "DefectSummaryEntry": {
+            "type": "object",
+            "required": [
+                "severity",
+                "count"
+            ],
+            "properties": {
+                "severity": {
+                    "type": "string",
+                    "example": "Major"
+                },
+                "count": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
+        "EffortSummary": {
+            "type": "object",
+            "required": [
+                "projectDate",
+                "activity"
+            ],
+            "properties": {
+                "projectDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-03-01T00:00:00.000Z"
+                },
+                "activity": {
+                    "type": "object",
+                    "items": {
+                        "$ref": "#/definitions/EffortSummaryEntry"
+                    }
+                }
+            }
+        },
+        "EffortSummaryEntry": {
+            "type": "object",
+            "required": [
+                "role",
+                "count"
+            ],
+            "properties": {
+                "role": {
+                    "type": "string",
+                    "example": "Test"
+                },
+                "count": {
+                    "type": "integer",
+                    "example": 2
                 }
             }
         }
