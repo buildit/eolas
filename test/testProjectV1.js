@@ -13,18 +13,6 @@ logger.setLevel(config.get('log-level'));
 const UNITTESTPROJECT = 'Project Unit Test Project';
 const NOPROJECT = 'Should Not Exist Project';
 
-var A_PROJECT = {
-    name: UNITTESTPROJECT,
-    program: "Project Test Data",
-    portfolio: "Unit Test Data",
-    description: "A set of basic test data to be used to validate behavior of client systems.",
-    startDate: null,
-    endDate: null,
-    demand: {},
-    defect: {},
-    effort: {},
-    projection: {}};
-
 function buildResponse() {
   return HttpMocks.createResponse({eventEmitter: require('events').EventEmitter})
 }
@@ -144,8 +132,31 @@ describe('Project Services Tests', function() {
   });
 
   it('Test Update Project', function(done) {
-    var updatedProject = JSON.parse(JSON.stringify(A_PROJECT));
-    updatedProject.program = 'OTHER';
+    var response = buildResponse();
+    var request  = HttpMocks.createRequest({
+      params: {'name': UNITTESTPROJECT},
+      body: {
+          name: UNITTESTPROJECT,
+          program: "OTHER",
+          portfolio: "OTHER",
+          description: "A set of basic test data to be used to validate behavior of client systems.",
+          startDate: null,
+          endDate: null,
+          demand: [],
+          defect: [],
+          effort: [],
+          projection: {}}
+    });
+
+    response.on('end', function() {
+      should(response.statusCode).equal(HttpStatus.OK);
+      done();
+    });
+
+    project.updateProjectByName(request, response);
+  });
+
+  it('Test Update a Project with no changes', function(done) {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       params: {'name': UNITTESTPROJECT},

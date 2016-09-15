@@ -103,7 +103,8 @@ exports.updateProjectByName = function (req, res) {
       var col = db.collection('project');
       var result = yield col.updateOne({name: projectName}, {$set: project});
       db.close();
-      if (result.modifiedCount > 0) {
+
+      if (result.matchedCount > 0) {
         res.status(HttpStatus.OK);
         var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
         logger.debug("updateProjectByName - Updated @ " + tmpBody);
