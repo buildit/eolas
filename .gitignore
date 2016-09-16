@@ -25,6 +25,7 @@ dist
 
 # Dependency directories
 node_modules
+.nyc_output
 
 # generated files
 config/acceptance.json
