@@ -20,18 +20,14 @@ $ npm install
 ```
 
 ## USAGE
-
-### Serve data
-
-Below runs the REST server.
+Start the server:
+```sh
+$ npm start
+```
 
 Edit `config/development.json` to change the port on which the server listens.
 
 Resources supported are described in the `MI_JSON_MODEL.json` file
-
-```sh
-$ node index.js
-```
 
 This project uses log4js.  There is a config file that specifically for that.
 It is handy to have console logging on when debugging so add the following into the appenders list.
