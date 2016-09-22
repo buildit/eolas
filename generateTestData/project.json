@@ -1,0 +1,103 @@
+{
+	"_id" : "BLANK",
+	"id" : "BLANK",
+	"name" : "BLANK",
+	"program" : "BLANK",
+	"portfolio" : "BLANK",
+	"status" : "Active",
+	"description" : "Generated Test Data",
+	"startDate" : "2016-07-01",
+	"endDate" : "2016-11-25",
+	"phase" : null,
+	"demand" : {
+		"source" : "TESTDATA",
+		"url" : "",
+		"project" : "",
+		"authPolicy" : "",
+		"username" : "",
+		"password" : "",
+		"flow" : [
+			{
+				"sequence" : 1,
+				"name" : "Backlog"
+			},
+			{
+				"sequence" : 2,
+				"name" : "Selected for Development"
+			},
+			{
+				"sequence" : 3,
+				"name" : "In Progress"
+			},
+			{
+				"sequence" : 4,
+				"name" : "Done"
+			}
+		]
+	},
+	"defect" : {
+		"source" : "TESTDATA",
+		"url" : "",
+		"project" : "",
+		"authPolicy" : "",
+		"username" : "",
+		"password" : "",
+		"flow" : [ ],
+		"severity" : [
+			{
+				"sequence" : 1,
+				"name" : "Sev 1",
+				"groupWith" : "Sev 2"
+			},
+			{
+				"sequence" : 2,
+				"name" : "Sev 2",
+				"groupWith" : "Sev 1"
+			},
+			{
+				"sequence" : 3,
+				"name" : "Sev 3",
+				"groupWith" : null
+			},
+			{
+				"sequence" : 4,
+				"name" : "Sev 4",
+				"groupWith" : null
+			}
+		]
+	},
+	"effort" : {
+		"source" : "TESTDATA",
+		"url" : "",
+		"project" : "",
+		"authPolicy" : "",
+		"username" : "",
+		"password" : "",
+		"role" : [
+			{
+				"name" : "PM",
+				"groupWith" : "SD"
+			},
+			{
+				"name" : "BA",
+				"groupWith" : "PM"
+			},
+			{
+				"name" : "SD",
+				"groupWith" : null
+			},
+			{
+				"name" : "Build",
+				"groupWith" : null
+			},
+			{
+				"name" : "Test",
+				"groupWith" : null
+			},
+			{
+				"name" : "Release Mgmt",
+				"groupWith" : null
+			}
+		]
+	}
+}

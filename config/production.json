@@ -1,0 +1,17 @@
+{
+   "datastore": {
+      "dbUrl": "mongodb://mongodb.buildit.tools:27017",
+      "context": "development",
+      "rootDB": "buildit"
+   },
+   "server": {
+      "url": "localhost",
+      "port": 6565
+   },
+   "projectSource": {
+     "system": "Harvest",
+     "url": "https://builditglobal.harvestapp.com/",
+     "encodedUser": "cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"
+   },
+   "log-level": "DEBUG"
+}

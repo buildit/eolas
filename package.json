@@ -14,7 +14,8 @@
     "validate": "echo '=> validating Eolas' && npm run lint && npm run test && npm run security",
     "preversion": "npm run validate",
     "version": "git add -A",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "generateTestData": "node generateTestData"
   },
   "pre-commit": [
     "validate"
@@ -49,6 +50,7 @@
     "http-status-codes": "^1.0.6",
     "log4js": "^0.6.37",
     "method-override": "^2.3.6",
+    "moment": "^2.15.1",
     "mongodb": "^2.2.4",
     "ramda": "^0.22.1",
     "response-time": "^2.3.1",
