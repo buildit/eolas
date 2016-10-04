@@ -41,7 +41,7 @@ node {
     stage ('Deploy to production')
       sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
       sh "convox env set NODE_ENV=production --app ${appName}"
-      sh "convox deploy --app ${appName} --description '${tag}' --file ${tmpFile}"
+      sh "convox deploy --app ${appName} --description '${tag}' --file ${tmpFile} --wait"
       sh "rm ${tmpFile}"
 
       // wait until the app is deployed
