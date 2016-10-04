@@ -65,7 +65,7 @@ node {
 
         sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
         sh "convox env set NODE_ENV=staging --app ${appName}-staging"
-        sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile}"
+        sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile} --wait"
 
       stage ('Run Functional Acceptance Tests')
         // wait until the app is deployed
