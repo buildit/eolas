@@ -17,5 +17,10 @@ This section describes how the Swagger style API documentation file for Eolas is
 - Launch the Swagger UI (I just open the index.html in the dist directory)
 - Navigate to the Eolas URL (localhost:6565/doc)
 
+OR
+
+- There is an on-line demo of Swagger [here](http://petstore.swagger.io/ "Pet Store Swagger Example")
+- Replace the Pet Store Swagger URL with the Eolas URL for the Swagger documentation (e.g. http://localhost:6565/v1/doc)
+
 
 [<-BACK](README.md)

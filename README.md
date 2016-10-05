@@ -20,7 +20,8 @@ $ npm install
 ```
 
 ## USAGE
-Start the server:
+### Serve data
+To start the REST server:
 ```sh
 $ npm start
 ```

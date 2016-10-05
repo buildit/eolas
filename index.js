@@ -19,5 +19,5 @@ app.use('/v1', v1Route);
 
 const port = config.get('server.port');
 app.listen(port, function () {
-  logger.info('Synergy REST API Service listening on port ' + port + '!');
+  logger.info('Eolas REST API Service listening on port ' + port + '!');
 });
