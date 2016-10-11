@@ -51,5 +51,14 @@ It is handy to have console logging on when debugging so add the following into 
 | `npm run validate`  | Run all of the above                                                |
 | `npm run accept`    | Run acceptance tests (chakram) - requires the server to be running  |
 
+### Generate test data
+To generate test data, run the scripts in "test_data". Each script creates data for one project. For example, this would insert into the local development database one project and it's associated data for status and projection:
+
+```sh
+node test_data/testdata1.js
+```
+
+To create additional test data, copy the format of the files in "test_data".
+
 ## Swagger API
 [Directions](swagger.md "Swagger documentation generation")
