@@ -1,14 +1,13 @@
 'use strict';
 
-//var swaggerTools = require('swagger-tools');
-const config = require('config');
-const fs = require('fs');
-const log4js = require('log4js');
-const tryMe = require('try');
+const Config = require('config');
+const FS = require('fs');
+const Log4js = require('log4js');
+const TryMe = require('try');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.serveDoc = function(req, res) {
   logger.debug('serve swagger api doc');
@@ -17,8 +16,8 @@ exports.serveDoc = function(req, res) {
   var tmp = req.originalUrl.split('/');
   var pathToFile = './api_doc/' + tmp[1] + '/swagger.json'
 
-  new tryMe ( function(){
-    spec = fs.readFileSync(pathToFile, 'utf8');
+  new TryMe ( function(){
+    spec = FS.readFileSync(pathToFile, 'utf8');
   }).finally(function (err) {
       logger.error(err);
   });

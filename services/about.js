@@ -1,23 +1,23 @@
 'use strict'
 
-const config = require('config');
-const log4js = require('log4js');
+const Config = require('config');
+const Log4js = require('log4js');
 const HttpStatus = require('http-status-codes');
-const database = require('./mongodb/mongodb');
-const project = require('./harvest/harvest');
+const database = require('./dataStore/mongodb');
+const project = require('./projectSource/harvest');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.ping = function(req, res) {
-  logger.debug('ping');
+  logger.info('ping');
   res.status(HttpStatus.OK);
-  res.json(config);
+  res.json(Config);
 };
 
 exports.deepPing = function (req, res) {
-  logger.debug('pingDeep');
+  logger.info('pingDeep');
 
  var externalInfo = {};
 

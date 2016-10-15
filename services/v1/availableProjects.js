@@ -1,30 +1,30 @@
 'use strict'
 
-const config = require('config');
-const ErrorHelper = require('../errors');
+const Config = require('config');
+const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
-const Harvest = require('../harvest/harvest');
-const log4js = require('log4js');
+const harvest = require('../projectSource/harvest');
+const Log4js = require('log4js');
 const MongoClient = require('mongodb');
-const ProjectSummaryArray = require('../../util/projectSummaryArray').ProjectSummaryArray;
+const projectSummaryArray = require('../../util/projectSummaryArray').ProjectSummaryArray;
 const utils = require('../../util/utils');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.getAvailableProjects = function (req, res) {
-  logger.debug("getAvailableProjects");
+  logger.info('getAvailableProjects');
 
-  var projectSource = config.get('projectSource.system');
+  var projectSource = Config.get('projectSource.system');
 
-  switch(projectSource) {
-      case "Harvest":
-        Harvest.getAvailableProjectList()
+  switch(projectSource.toUpperCase()) {
+      case "HARVEST":
+        harvest.getAvailableProjectList()
           .then(function (currentProjects) {
             getExistingProjectNames()
               .then(function (existingNames){
-                var availableProjects = new ProjectSummaryArray();
+                var availableProjects = new projectSummaryArray();
                 availableProjects.addProjects(currentProjects);
                 availableProjects.remove(existingNames);
                 res.status(HttpStatus.OK);
@@ -37,7 +37,7 @@ exports.getAvailableProjects = function (req, res) {
               });
           })
           .catch(function (reason) {
-            logger.debug('Error getting unused Harvest Projects ' + reason);
+            logger.debug(`Error getting unused Harvest Projects ${reason}`);
             res.status(reason.statusCode);
             res.send(reason);
           });
@@ -45,25 +45,24 @@ exports.getAvailableProjects = function (req, res) {
       default:
         logger.debug(`getAvailableProjects - Unknown Project System - ${projectSource}`);
         res.status(HttpStatus.NOT_FOUND);
-        res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unknown Project System ' + projectSource));
+        res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unknown Project System ${projectSource}`));
   }
-
 };
 
 function getExistingProjectNames() {
-  logger.debug("getExistingProjectNames");
+  logger.info('getExistingProjectNames');
 
   return new Promise(function (resolve, reject) {
     MongoClient.connect(utils.dbCorePath(), function (error, db) {
       if (error) {
         logger.error(`FAIL connecting to Mongo: ${error}`);
-        reject(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
+        reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
       }
       db.collection('project').find({}, {_id: 0, name: 1}).toArray(function (err, docs) {
         db.close();
         if (err) {
           logger.error(`FAIL reading project collection: ${err}`);
-          reject(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
+          reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
         } else {
           resolve(docs);
         }

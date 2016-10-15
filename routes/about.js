@@ -1,10 +1,10 @@
 'use strict'
 
-const express = require('express');
-const router = express.Router();
 const about = require('../services/about');
+const Express = require('express');
+const Router = Express.Router();
 
-router.get('/', about.ping);
-router.get('/deep', about.deepPing);
+Router.get('/', about.ping);
+Router.get('/deep', about.deepPing);
 
-module.exports = router;
+module.exports = Router;

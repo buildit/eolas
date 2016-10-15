@@ -1,17 +1,17 @@
 'use strict'
 
 const available = require('./availableProjects');
-const co = require('co');
-const config = require('config');
-const ErrorHelper = require('../errors');
+const CO = require('co');
+const Config = require('config');
+const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
-const log4js = require('log4js');
+const Log4js = require('log4js');
 const MongoClient = require('mongodb');
 const utils = require('../../util/utils');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.getProjectSummary = function (req, res) {
   if (req.query.status === undefined) {
@@ -25,14 +25,14 @@ exports.getProjectSummary = function (req, res) {
   } else {
     logger.debug(`Unsuported project status - ${req.query.status}`);
     res.status(HttpStatus.BAD_REQUEST);
-    res.send(ErrorHelper.errorBody(HttpStatus.BAD_REQUEST, `Unsuported project status - ${req.query.status}`));
+    res.send(errorHelper.errorBody(HttpStatus.BAD_REQUEST, `Unsuported project status - ${req.query.status}`));
   }
 };
 
 function getProjectSummaryAll (req, res) {
   logger.debug('getProjectSummaryAll');
 
-  co(function*() {
+  CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var projectList = yield col.find({},
@@ -42,14 +42,14 @@ function getProjectSummaryAll (req, res) {
   }).catch(function(err) {
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
   });
 }
 
 function getProjectSummaryFiltered (req, res, portfolioName) {
   logger.debug(`getProjectSummaryFiltered portfolio=[${portfolioName}]`);
 
-  co(function*() {
+  CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var projectList = yield col.find({portfolio: portfolioName},
@@ -59,6 +59,6 @@ function getProjectSummaryFiltered (req, res, portfolioName) {
   }).catch(function(err) {
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
   });
 }

@@ -1,13 +1,12 @@
 'use strict'
 
-const config = require('config');
-const log4js = require('log4js');
+const Config = require('config');
+const Log4js = require('log4js');
 const HttpStatus = require('http-status-codes');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
-
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.logErrors = function(err, req, res, next) {
   logger.error("#### An Error occured \n" + err.stack);

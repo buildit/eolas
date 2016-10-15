@@ -1,18 +1,18 @@
 'use strict'
 
-const config = require('config');
-const log4js = require('log4js');
+const Config = require('config');
+const Log4js = require('log4js');
 const MongoClient = require('mongodb');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 /* eslint-disable no-unused-vars */
 exports.deepPing = function () {
-  logger.debug('pingDeep - mongodb');
+  logger.info('pingDeep - mongodb');
 
-  var dbUrl = config.get('datastore.dbUrl');
+  var dbUrl = Config.get('datastore.dbUrl');
 
   return new Promise(function (resolve, reject) {
     MongoClient.connect(dbUrl, function(err, db) {

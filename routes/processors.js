@@ -1,17 +1,17 @@
 'use strict'
 
-const bodyParser = require('body-parser');
-const config = require('config');
-const express = require('express');
+const BodyParser = require('body-parser');
+const Config = require('config');
+const Express = require('express');
 const errorHandler = require('../services/errors');
-const log4js = require('log4js');
-const methodOverride = require('method-override');
-const responseTime = require('response-time')
-const router = express.Router();
+const Log4js = require('log4js');
+const MethodOverride = require('method-override');
+const ResponseTime = require('response-time')
+const Router = Express.Router();
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 const appLogger = function (req, res, next) {
   logger.debug("*** HEADERS");
@@ -20,7 +20,7 @@ const appLogger = function (req, res, next) {
   logger.debug("*** BODY");
   logger.debug(JSON.stringify(req.body));
   logger.debug("*** BODY");
-  logger.info(req.method + ' called on ' + req.path + ' with params ' + JSON.stringify(req.params) + ' and query' + JSON.stringify(req.query));
+  logger.info(`${req.method} called on ${req.path} with params ${JSON.stringify(req.params)} and query ${JSON.stringify(req.query)}`);
   next();
 };
 
@@ -31,17 +31,16 @@ const originPolicy = function (req, res, next) {
   next();
 };
 
-router.use(bodyParser.json());
-//router.use(bodyParser.urlencoded({extended: false}));
-router.use(methodOverride('X-HTTP-Method'));          // Microsoft
-router.use(methodOverride('X-HTTP-Method-Override')); // Google/GData
-router.use(methodOverride('X-Method-Override'));      // IBM router.use()
-router.use(responseTime());
-router.use(appLogger);
-router.use(log4js.connectLogger(logger, { level: log4js.levels.INFO, format: ':method :url' }));
-router.use(originPolicy);
-router.use(errorHandler.logErrors);
-router.use(errorHandler.clientErrorHandler);
-router.use(errorHandler.catchAllHandler);
+Router.use(BodyParser.json());
+Router.use(MethodOverride('X-HTTP-Method'));          // Microsoft
+Router.use(MethodOverride('X-HTTP-Method-Override')); // Google/GData
+Router.use(MethodOverride('X-Method-Override'));      // IBM router.use()
+Router.use(ResponseTime());
+Router.use(appLogger);
+Router.use(Log4js.connectLogger(logger, { level: Log4js.levels.INFO, format: ':method :url' }));
+Router.use(originPolicy);
+Router.use(errorHandler.logErrors);
+Router.use(errorHandler.clientErrorHandler);
+Router.use(errorHandler.catchAllHandler);
 
-module.exports = router;
+module.exports = Router;

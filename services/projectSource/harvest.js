@@ -1,16 +1,16 @@
 'use strict';
 
-const config = require('config');
+const Config = require('config');
 const errorHelper = require('../errors');
-const log4js = require('log4js');
+const Log4js = require('log4js');
 const HttpStatus = require('http-status-codes');
 const R = require('ramda');
-const rest = require('restler');
+const Rest = require('restler');
 const utils = require('../../util/utils');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 //  Sample Data from Harvest
 //
@@ -84,7 +84,7 @@ exports.getAvailableProjectList = function() {
             projects.forEach(function(aProject) {
               aProject.portfolio = clients[aProject.portfolio];
             });
-            logger.debug(`total available projects - ${projects.length}`);
+            logger.debug(`total available projects -> ${projects.length}`);
             resolve(projects);
           })
           .catch(function (reason) {
@@ -101,10 +101,10 @@ exports.getAvailableProjectList = function() {
 function getProjectList () {
   logger.info('getProjectList');
 
-  var harvestURL = config.get('projectSource.url') + 'projects';
+  var harvestURL = Config.get('projectSource.url') + 'projects';
   return new Promise(function (resolve, reject) {
-    rest.get(harvestURL,
-      {headers: utils.createBasicAuthHeader(config.get('projectSource.encodedUser'))}
+    Rest.get(harvestURL,
+      {headers: utils.createBasicAuthHeader(Config.get('projectSource.encodedUser'))}
       ).on('complete', function(data, response) {
 
         logger.debug(`complete`);
@@ -114,10 +114,10 @@ function getProjectList () {
           reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving project list'));
         }
 
-        logger.debug(`getAvailableProjectList - from Harvest -  ${response.statusCode} reading ${data.length} projects`);
+        logger.debug(`getAvailableProjectList -> from Harvest -  ${response.statusCode} reading ${data.length} projects`);
 
         if (data.length < 1) {
-          logger.debug('getAvailableProjectList - Not Found');
+          logger.debug('getAvailableProjectList -> Not Found');
           reject(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find availabe projects'));
         } else {
           const availableProjects = R.pipe(
@@ -129,18 +129,18 @@ function getProjectList () {
           logger.debug(`Billable and Active project count - ${availableProjects.length}`);
 
           if (availableProjects.length < 1) {
-            logger.debug('getAvailableProjectList - No Active / Billable projects found');
+            logger.debug('getAvailableProjectList -> No Active / Billable projects found');
             reject(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'No projects are availabe at this time.'));
           } else {
             resolve(availableProjects);
           }
         }
       }).on('fail', function(data, response) {
-        logger.debug('getAvailableProjectList - FAIL');
+        logger.debug('getAvailableProjectList -> FAIL');
         logger.error(`FAIL: ${response.statusCode} - MESSAGE ${data.errorMessages}`);
         reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find availabe projects'));
       }).on('error', function(data, response) {
-        logger.debug('getAvailableProjectList - ERROR');
+        logger.debug('getAvailableProjectList -> ERROR');
         logger.error(`FAIL: ${response.statusCode} - MESSAGE ${data.errorMessages}`);
         reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find availabe projects'));
       });
@@ -149,11 +149,11 @@ function getProjectList () {
 
 function getClientList () {
   logger.info('getClientList');
-  const harvestURL = config.get('projectSource.url') + 'clients';
+  const harvestURL = Config.get('projectSource.url') + 'clients';
 
   return new Promise(function (resolve, reject) {
-    rest.get(harvestURL,
-      {headers: utils.createBasicAuthHeader(config.get('projectSource.encodedUser'))}
+    Rest.get(harvestURL,
+      {headers: utils.createBasicAuthHeader(Config.get('projectSource.encodedUser'))}
       ).on('complete', function(data, response) {
 
         if (response && response.statusCode !== 200){
@@ -161,10 +161,10 @@ function getClientList () {
           reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Error retrieving client list'));
         }
 
-        logger.debug(`getClientList - from Harvest - ${response.statusCode} reading ${data.length} client`);
+        logger.debug(`getClientList -> from Harvest - ${response.statusCode} reading ${data.length} client`);
 
         if (data.length < 1) {
-          logger.debug('getClientList - Not Found');
+          logger.debug('getClientList -> Not Found');
           reject(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Unable to find clients'));
         } else {
           const availableClients = {};
@@ -179,18 +179,18 @@ function getClientList () {
           logger.debug(`Active Client Count - ${numClients}`);
 
           if (numClients < 1) {
-            logger.debug('getClientList - No Active clients found');
+            logger.debug('getClientList -> No Active clients found');
             reject(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'No clients are availabe at this time.'));
           } else {
             resolve(availableClients);
           }
         }
       }).on('fail', function(data, response) {
-        logger.debug('getClientList - FAIL');
+        logger.debug('getClientList -> FAIL');
         logger.error(`FAIL: ${response.statusCode} - MESSAGE ${data.errorMessages}`);
         reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find availabe clients'));
       }).on('error', function(data, response) {
-        logger.debug('getClientList - ERROR');
+        logger.debug('getClientList -> ERROR');
         logger.error(`FAIL: ${response.statusCode} - MESSAGE ${data.errorMessages}`);
         reject(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find availabe clients'));
       });
@@ -199,13 +199,13 @@ function getClientList () {
 
 /* eslint-disable no-unused-vars */
 exports.deepPing = function () {
-  logger.debug('pingDeep - Harvest');
+  logger.info('pingDeep -> Harvest');
 
-  var projectUrl = (config.get('projectSource.url') + 'account/who_am_i');
+  var projectUrl = (Config.get('projectSource.url') + 'account/who_am_i');
 
   return new Promise(function (resolve, reject) {
-    rest.get(projectUrl,
-      {headers: utils.createBasicAuthHeader(config.get('projectSource.encodedUser'))}
+    Rest.get(projectUrl,
+      {headers: utils.createBasicAuthHeader(Config.get('projectSource.encodedUser'))}
       ).on('success', function(data, response) {
 
         if (response && response.statusCode !== HttpStatus.OK){
@@ -214,18 +214,17 @@ exports.deepPing = function () {
         }
 
         if (data.length < 1) {
-          logger.debug('pingDeep - Not Found');
+          logger.debug('pingDeep -> Not Found');
           resolve(generateConnectionInformation(projectUrl, 'pingDeep - no data from Harvest'));
         } else {
           resolve(generateConnectionInformation(projectUrl, data.company.name));
         }
       }).on('fail', function(data, response) {
-        logger.debug('pingDeep - FAIL');
+        logger.debug('pingDeep -> FAIL');
         resolve(generateConnectionInformation(projectUrl, `pingDeep error from Harvest - ${response.statusCode} MESSAGE ${data.statusMessage}`));
       }).on('error', function(data, response) {
-        logger.error('pingDeep - ERROR - data ' + data + ' - response ' + response);
-        logger.error(`pingDeep - ERROR - data ${data} - response ${response}`);
-        resolve(generateConnectionInformation(projectUrl, 'pingDeep error from Harvest - ' + data));
+        logger.error(`pingDeep -> ERROR - data ${data} - response ${response}`);
+        resolve(generateConnectionInformation(projectUrl, `pingDeep error from Harvest - ${data}`));
       });
   });
 };
