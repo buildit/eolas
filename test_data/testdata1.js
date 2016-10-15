@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('config');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const utils = require('../util/utils');
@@ -11,7 +10,7 @@ const utils = require('../util/utils');
 //
 // ***************************************
 
-var projects = {};
+var project = {};
 var demandSequence = [];
 var defectSeverity = [];
 var roleNames = [];
@@ -78,7 +77,7 @@ projectionInfo = {
      endVelocity: 10
   }
 
-  projects = {
+  project = {
     name: "Test Project 1",
     program: "Basic Test Data",
     portfolio: "Acceptance Test Data",
@@ -94,8 +93,8 @@ MongoClient.connect(utils.dbCorePath(), function (err, db) {
   assert.equal(null, err);
   var col = db.collection('project');
   col.findOneAndReplace(
-    {name: projects.name},
-    projects,
+    {name: project.name},
+    project,
     {upsert: true},
     function (error, doc) {
       assert.equal(null, error);
@@ -228,7 +227,7 @@ var demand = [
   {"projectDate":"2016/11/03","status":{"Backlog":10,"Selected for Development":1,"In Progress":1,"Done":108}}
 ];
 
-  var url = utils.dbProjectPath(projects.name);
+  var url = utils.dbProjectPath(project.name);
 
   MongoClient.connect(url, function (err, db) {
     assert.equal(null, err);
