@@ -3,15 +3,18 @@ Gaelic - Knowledge (of experience)
 
 ## PURPOSE
 
-This project is an expressjs based REST service primarily used to provide project related information to the Buildit Management Information Utilities.  Additionally it allows for the creation and maintenance of structures that drive the extraction and transformation of said project related demand, defect, and effort data.
+This project is a Nodejs / Expressjs based REST service primarily used to provide project related information to the Buildit Management Information Utilities (see Synapse as the reference client).  Additionally it allows for the creation and maintenance of structures that drive the extraction and transformation of said project related demand, defect, and effort data.
 
 ## INSTALLATION
 
-This service requires a data store. At this time that is MongoDB.
-Please install, configure, and have it running prior to using this app.
-Then use the `config/development.json` to set the mongodb URL.
+Eolas requires the installation of NPM prior to doing any work.  [See the NPM site for installation instructions](npmjs.com "NPM installtion")
 
-See MongoDB installation hints [here](mongodb.md "Mongo DB installtion instructions")
+The Eolas service also requires a data store. At this time that is MongoDB.
+Please install, configure, and have it running prior to using this app.  See MongoDB installation hints [here](mongodb.md "Mongo DB installtion instructions")
+
+Once installed you can use the `datastore.dbUrl` property defined in the `config/development.json` file to point to your installation.
+
+The `datastore.context` property defined in the `config/development.json` file is used to allow users / installs to share a common mongo instance and still maintain separate data.  Yes it is a bit of a hack, but it works.
 
 Prior to using or developing run the command below to load all node.js requirements
 
@@ -20,6 +23,7 @@ $ npm install
 ```
 
 ## USAGE
+
 ### Serve data
 To start the REST server:
 ```sh
@@ -28,20 +32,17 @@ $ npm start
 
 Edit `config/development.json` to change the port on which the server listens.
 
-Resources supported are described in the `MI_JSON_MODEL.json` file
-
-This project uses log4js.  There is a config file that specifically for that.
-It is handy to have console logging on when debugging so add the following into the appenders list.
-```json
-	{
-		"type": "console",
-		"layout": {
-			"type": "pattern",
-			"pattern": "%d{ABSOLUTE} %[%-5p%] %c %m"
-		}
-	}
-```
 ## DEVELOPMENT
+
+[For discussion on the structure of this project](structure.md "Eolas structure")
+
+Eolas is uses ESLint recommended rules to guide code format styles.  Rules are defined in the .eslintrc file.  By default all .js files are linted.
+
+Eolas uses Mocha and associated libraries to support unit level testing and nycjs to document code coverage.  Want to make a change?  Write a test.  Write code until it passes.  Make sure you didn't break any other tests.
+
+Eolas uses a Mocha derivative called Chakram to support acceptance testing.  Acceptance testing requires a running instance of Eolas to execute against.  Want to make a change?  (you see where I am going with this).
+
+The scripts below are defined in package.json and are excuted by the CI process.  Please exectute the validate and accept scripts prior to checking in code.
 
 | cli                 | purpose                                                             |
 |---------------------|---------------------------------------------------------------------|
@@ -51,27 +52,11 @@ It is handy to have console logging on when debugging so add the following into 
 | `npm run validate`  | Run all of the above                                                |
 | `npm run accept`    | Run acceptance tests (chakram) - requires the server to be running  |
 
-### Generate test data
-To generate test data, run the scripts in "test_data". Each script creates data for one project. For example, this would insert into the local development database one project and it's associated data for status and projection:
+Eolas also makes use of Gulp to support configuration and packaging.  See gulpfile.js
 
-```sh
-node test_data/testdata1.js
-```
-
-To create additional test data, copy the format of the files in "test_data".
-
-To generate this data on Staging:
-
-1. Find the url of the staging instance of the database. To do so, ping Eolas by visiting [this endpoint](http://eolas.staging.buildit.tools/ping). (You must be connected to the VPN to reach the staging API.) Look for the dbUrl value. It looks something like this: `dbUrl: "mongodb://mongodb.buildit.tools:27017"`
-2. Open "config/development.json". Point the configuration to the staging instance of the database by setting the value of "dbUrl" in "config/development.json" to the value you found above.
-3. In "config/development.json", set "context" to "staging".
-4. Run the scripts. E.g.:
-```sh
-node test_data/testdata1.js
-node test_data/testdata2.js
-node test_data/testdata3.js
-```
-5. When you're done, change "config/development.json" back to its previous state.
+Eolas CI/CD assumes the use of Jenkins Pipeline features (as described by the staging and production groovy scripts in the pipelines directory).  CI/CD in turn relies on both Docker and Convox for packaging and deployment respectively.
 
 ## Swagger API
+The Eolas REST API is documented using Swagger.  See the link below for directions on viewing and maintaining said documentation.
+
 [Directions](swagger.md "Swagger documentation generation")

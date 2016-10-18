@@ -1,22 +1,22 @@
 'use strict'
 
-const co = require('co');
-const config = require('config');
-const ErrorHelper = require('../errors');
+const CO = require('co');
+const Config = require('config');
+const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
-const log4js = require('log4js');
+const Log4js = require('log4js');
 const MongoClient = require('mongodb');
 const utils = require('../../util/utils');
 
-log4js.configure('config/log4js_config.json', {});
-const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+Log4js.configure('config/log4js_config.json', {});
+const logger = Log4js.getLogger();
+logger.setLevel(Config.get('log-level'));
 
 exports.getProjectByName = function (req, res) {
   var projectName = decodeURIComponent(req.params.name);
-  logger.debug(`getProjectByName for ${projectName}`);
+  logger.info(`getProjectByName for ${projectName}`);
 
-  co(function*() {
+  CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var aProject = yield col.find({name: projectName}, {_id: 0}).toArray();
@@ -25,7 +25,7 @@ exports.getProjectByName = function (req, res) {
     if (aProject.length < 1) {
       logger.debug("getProjectByName - Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project [${projectName}] in ${utils.dbCorePath()}`));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project [${projectName}] in ${utils.dbCorePath()}`));
     } else {
       res.send(aProject[0]);
     }
@@ -33,12 +33,12 @@ exports.getProjectByName = function (req, res) {
     logger.debug("getProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find project ' + projectName));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, `Unable to find project ${projectName}`));
   });
 };
 
 exports.createProjectByName = function (req, res) {
-  logger.debug("createProjectByName");
+  logger.info("createProjectByName");
 
   var projectName = decodeURIComponent(req.params.name);
   var project = req.body;
@@ -46,20 +46,20 @@ exports.createProjectByName = function (req, res) {
   if (projectName !== project.name) {
     logger.debug("createProjectByName - Missmatched name between URL and BODY");
     res.status(HttpStatus.BAD_REQUEST);
-    res.send(ErrorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
+    res.send(errorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
        does not match the project id in the request body.
        req.params.p_id: ${JSON.stringify(projectName)}
-       req.body.id: project.name`));
+       req.body.id: ${project.name}`));
   } else {
-    co(function*() {
+    CO(function*() {
       var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
       var count = yield col.count({name: projectName});
       if (count > 0) {
-        logger.debug("createProjectByName - Duplicate Resource");
+        logger.debug("createProjectByName -> Duplicate Resource");
         db.close();
         res.status(HttpStatus.FORBIDDEN);
-        res.send(ErrorHelper.errorBody(HttpStatus.FORBIDDEN, 'Project ' + projectName + ' already exists.  Duplicates not permitted'));
+        res.send(errorHelper.errorBody(HttpStatus.FORBIDDEN, 'Project ' + projectName + ' already exists.  Duplicates not permitted'));
       } else {
         var result = yield col.insertOne(project);
         db.close();
@@ -67,38 +67,38 @@ exports.createProjectByName = function (req, res) {
         if (result.insertedCount > 0) {
           res.status(HttpStatus.CREATED);
           var tmpBody = '{"url": "' + req.protocol + '://' + req.hostname + req.originalUrl + '"}';
-          logger.debug("createProjectByName - Created @ " + tmpBody);
+          logger.debug("createProjectByName -> Created @ " + tmpBody);
           res.send(tmpBody);
         } else {
-          logger.debug("createProjectByName - Project was not created" + projectName);
+          logger.debug("createProjectByName -> Project was not created" + projectName);
           res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-          res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
+          res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
         }
       }
     }).catch(function(err) {
       logger.debug("createProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to create project ' + projectName));
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to create project ' + projectName));
     });
   }
 };
 
 exports.updateProjectByName = function (req, res) {
-  logger.debug("updateProjectByName");
+  logger.info("updateProjectByName");
 
   var projectName = decodeURIComponent(req.params.name);
   var project = req.body;
 
   if (projectName !== project.name) {
-    logger.debug("updateProjectByName - Missmatched name between URL and BODY");
+    logger.debug("updateProjectByName -> Missmatched name between URL and BODY");
     res.status(HttpStatus.BAD_REQUEST);
-    res.send(ErrorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
+    res.send(errorHelper.errorBody(HttpStatus.BAD_REQUEST, `The project id in the request params
        does not match the project id in the request body.
        req.params.p_id: ${JSON.stringify(projectName)}
-       req.body.id: project.name`));
+       req.body.id: ${project.name}`));
   } else {
-    co(function*() {
+    CO(function*() {
       var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
       var result = yield col.updateOne({name: projectName}, {$set: project});
@@ -110,25 +110,25 @@ exports.updateProjectByName = function (req, res) {
         logger.debug("updateProjectByName - Updated @ " + tmpBody);
         res.send(tmpBody);
       } else {
-        logger.debug("updateProjectByName - Project doesn't exist " + projectName);
+        logger.debug("updateProjectByName -> Project doesn't exist " + projectName);
         res.status(HttpStatus.NOT_FOUND);
-        res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot update.'));
+        res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot update.'));
       }
     }).catch(function(err) {
-      logger.debug("updateProjectByName - ERROR");
+      logger.debug("updateProjectByName -> ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to update project ' + projectName));
+      res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to update project ' + projectName));
     });
   }
 };
 
 exports.deleteProjectByName = function (req, res) {
-  logger.debug("deleteProjectByName");
+  logger.info("deleteProjectByName");
 
   var projectName = decodeURIComponent(req.params.name);
 
-  co(function*() {
+  CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var result = yield col.deleteOne({name: projectName});
@@ -139,12 +139,12 @@ exports.deleteProjectByName = function (req, res) {
     } else {
       logger.debug("deleteProjectByName - Project doesn't exist " + projectName);
       res.status(HttpStatus.NOT_FOUND);
-      res.send(ErrorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot Delete.'));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot Delete.'));
     }
   }).catch(function(err) {
     logger.debug("deleteProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    res.send(ErrorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project ' + projectName));
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project ' + projectName));
   });
 };
