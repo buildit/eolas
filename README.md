@@ -1,5 +1,5 @@
 # eolas
-Galic - Knowledge (of experience)
+Gaelic - Knowledge (of experience)
 
 ## PURPOSE
 
