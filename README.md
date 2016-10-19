@@ -56,6 +56,9 @@ Eolas also makes use of Gulp to support configuration and packaging.  See gulpfi
 
 Eolas CI/CD assumes the use of Jenkins Pipeline features (as described by the staging and production groovy scripts in the pipelines directory).  CI/CD in turn relies on both Docker and Convox for packaging and deployment respectively.
 
+### Generate test data
+Eolas contains scripts to generate test data. Instructions on using these scripts can be found [here](readme-generateTestData.md).
+
 ## Swagger API
 The Eolas REST API is documented using Swagger.  See the link below for directions on viewing and maintaining said documentation.
 
