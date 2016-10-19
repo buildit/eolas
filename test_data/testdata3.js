@@ -17,7 +17,6 @@ var roleNames = [];
 var demandInfo = {};
 var defectInfo = {};
 var effortInfo = {};
-var projectionInfo = {};
 
 // ***************************************
 // *********  Project structures
@@ -65,29 +64,17 @@ effortInfo = {
   userData: "",
   role: roleNames};
 
-projectionInfo = {
-     startDate: "2016-07-10",
-     iterationLength: 2,
-     backlogSize: 175,
-     targetVelocity: 20,
-     darkMatterPercentage: 10,
-     startIterations: 3,
-     startVelocity: 10,
-     endIterations: 2,
-     endVelocity: 10
-  }
-
   project = {
     name: "Test Project 3",
     program: "Basic Test Data",
     portfolio: "Acceptance Test Data",
-    description: "Contains demand and effort data, but no defect data.",
+    description: "Contains demand and effort. No defect or projection.",
     startDate: "2016-07-01",
     endDate: "2016-12-01",
     demand: demandInfo,
     defect: defectInfo,
     effort: effortInfo,
-    projection: projectionInfo};
+  };
 
 MongoClient.connect(utils.dbCorePath(), function (err, db) {
   assert.equal(null, err);
