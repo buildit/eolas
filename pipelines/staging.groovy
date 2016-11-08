@@ -5,8 +5,11 @@ node {
     try {
       stage ('Set Up') {
 
-        // cleanup workspace to have clean da
-        deleteDir()
+        // clean the workspace before checking out
+        if(fileExists('.git')) {
+          echo 'Perform workspace cleanup'
+          sh "git clean -ffdx"
+        }
 
         sh "curl -L https://dl.bintray.com/buildit/maven/jenkins-pipeline-libraries-${env.PIPELINE_LIBS_VERSION}.zip -o lib.zip && echo 'A' | unzip lib.zip"
 
