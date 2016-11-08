@@ -4,6 +4,10 @@ node {
 
     try {
       stage ('Set Up') {
+
+        // cleanup workspace to have clean da
+        deleteDir()
+
         sh "curl -L https://dl.bintray.com/buildit/maven/jenkins-pipeline-libraries-${env.PIPELINE_LIBS_VERSION}.zip -o lib.zip && echo 'A' | unzip lib.zip"
 
         ecr = load "lib/ecr.groovy"
@@ -31,9 +35,6 @@ node {
 
 
       stage ('Checkout') {
-
-        // cleanup workspace to have clean da
-        deleteDir()
 
         checkout scm
 
