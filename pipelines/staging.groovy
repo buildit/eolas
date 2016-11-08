@@ -31,6 +31,10 @@ node {
 
 
       stage ('Checkout') {
+
+        // cleanup workspace to have clean da
+        deleteDir()
+
         checkout scm
 
         // global for exception handling
@@ -45,7 +49,7 @@ node {
       }
 
       stage ('Validation') {
-        sh "NODE_ENV='validation' DB_URL='${mongoUrl}' CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
+        sh "DB_URL='${mongoUrl}' CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
         sh "NODE_ENV='validation' npm run validate"
       }
 
@@ -82,7 +86,7 @@ node {
         // wait until the app is deployed
         convox.waitUntilDeployed("${appName}-staging")
         convox.ensureSecurityGroupSet("${appName}-staging", env.CONVOX_SECURITYGROUP)
-        sh "NODE_ENV='validation' DB_URL='${mongoUrl}' CONTEXT='acceptance' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
+        sh "DB_URL='${mongoUrl}' CONTEXT='acceptance' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
         sh "NODE_ENV='acceptance' npm run accept"
       }
 
