@@ -34,6 +34,8 @@ node {
         slackChannel = "synapse"
         gitUrl = "https://bitbucket.org/digitalrigbitbucketteam/eolas"
         appUrl = "http://eolas.staging.${domainName}"
+
+        sendNotifications = !env.DEV_MODE
       }
 
 
@@ -98,14 +100,12 @@ node {
         docker.withRegistry(registry) {
           image.push("latest")
         }
-        //FIXME: temporary
-        //slack.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
+        if(sendNotifications) slack.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
       }
     }
     catch (err) {
       currentBuild.result = "FAILURE"
-      //FIXME: temporary
-      //slack.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
+      if(sendNotifications) slack.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
       throw err
     }
   }
