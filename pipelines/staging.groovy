@@ -4,6 +4,13 @@ node {
 
     try {
       stage ('Set Up') {
+
+        // clean the workspace before checking out
+        if(fileExists('.git')) {
+          echo 'Perform workspace cleanup'
+          sh "git clean -ffdx"
+        }
+
         sh "curl -L https://dl.bintray.com/buildit/maven/jenkins-pipeline-libraries-${env.PIPELINE_LIBS_VERSION}.zip -o lib.zip && echo 'A' | unzip lib.zip"
 
         ecr = load "lib/ecr.groovy"
@@ -27,10 +34,13 @@ node {
         slackChannel = "synapse"
         gitUrl = "https://bitbucket.org/digitalrigbitbucketteam/eolas"
         appUrl = "http://eolas.staging.${domainName}"
+
+        sendNotifications = !env.DEV_MODE
       }
 
 
       stage ('Checkout') {
+
         checkout scm
 
         // global for exception handling
@@ -45,7 +55,7 @@ node {
       }
 
       stage ('Validation') {
-        sh "NODE_ENV='validation' DB_URL='${mongoUrl}' CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
+        sh "DB_URL='${mongoUrl}' CONTEXT='validation' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
         sh "NODE_ENV='validation' npm run validate"
       }
 
@@ -82,6 +92,7 @@ node {
         // wait until the app is deployed
         convox.waitUntilDeployed("${appName}-staging")
         convox.ensureSecurityGroupSet("${appName}-staging", env.CONVOX_SECURITYGROUP)
+        sh "DB_URL='${mongoUrl}' CONTEXT='acceptance' SERVER_URL='${serverUrl}' SERVER_PORT='${serverPort}' LOG_LEVEL='DEBUG' npm run genConfig"
         sh "NODE_ENV='acceptance' npm run accept"
       }
 
@@ -89,12 +100,12 @@ node {
         docker.withRegistry(registry) {
           image.push("latest")
         }
-        slack.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
+        if(sendNotifications) slack.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
       }
     }
     catch (err) {
       currentBuild.result = "FAILURE"
-      slack.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
+      if(sendNotifications) slack.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
       throw err
     }
   }
