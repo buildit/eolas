@@ -1,21 +1,27 @@
 // Production release pipeline
+@Library('buildit')
+def LOADED = env.USE_GLOBAL_LIB
 
 node {
 
   currentBuild.result = "SUCCESS"
+  sendNotifications = !env.DEV_MODE
 
   try {
 
     stage ('Set Up') {
       checkout scm
 
-      sh "curl -L https://dl.bintray.com/buildit/maven/jenkins-pipeline-libraries-${env.PIPELINE_LIBS_VERSION}.zip -o lib.zip && echo 'A' | unzip lib.zip"
-
-      ui = load "lib/ui.groovy"
-      ecr = load "lib/ecr.groovy"
-      slack = load "lib/slack.groovy"
-      convox = load "lib/convox.groovy"
-      template = load "lib/template.groovy"
+      if (LOADED) {
+        slackInst = new slack()
+        templateInst = new template()
+        convoxInst = new convox()
+      } else {
+        sh "curl -L https://dl.bintray.com/buildit/maven/jenkins-pipeline-libraries-${env.PIPELINE_LIBS_VERSION}.zip -o lib.zip && echo 'A' | unzip lib.zip"
+        slackInst = load "lib/slack.groovy"
+        convoxInst = load "lib/convox.groovy"
+        templateInst = load "lib/template.groovy"
+      }
 
       domainName = "${env.MONGO_HOSTNAME}".substring(8)
       appName = "eolas"
@@ -35,7 +41,7 @@ node {
       // global for exception handling
       tag = "latest"
       tmpFile = UUID.randomUUID().toString() + ".tmp"
-      ymlData = template.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
+      ymlData = templateInst.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, server_url: serverUrl, server_port: serverPort])
 
       writeFile(file: tmpFile, text: ymlData)
     }
@@ -47,14 +53,14 @@ node {
       sh "rm ${tmpFile}"
 
       // wait until the app is deployed
-      convox.waitUntilDeployed("${appName}")
-      convox.ensureSecurityGroupSet("${appName}", env.CONVOX_SECURITYGROUP)
-      slack.notify("Deployed to Production", "Tag <${gitUrl}/commits/tag/${tag}|${tag}> has been deployed to <${appUrl}|${appUrl}>", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
+      convoxInst.waitUntilDeployed("${appName}")
+      convoxInst.ensureSecurityGroupSet("${appName}", env.CONVOX_SECURITYGROUP)
+      if(sendNotifications) slackInst.notify("Deployed to Production", "Tag <${gitUrl}/commits/tag/${tag}|${tag}> has been deployed to <${appUrl}|${appUrl}>", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
     }
   }
   catch (err) {
     currentBuild.result = "FAILURE"
-    slack.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/${tag}|${tag}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
+    if(sendNotifications) slackInst.notify("Error while deploying to Production", "Tag <${gitUrl}/commits/tag/${tag}|${tag}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
     throw err
   }
 }
