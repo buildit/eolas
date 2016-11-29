@@ -1,6 +1,6 @@
 // Production release pipeline
 @Library('buildit')
-def LOADED = env.USE_GLOBAL_LIB
+def LOADED = true
 
 node {
 
@@ -12,7 +12,7 @@ node {
     stage ('Set Up') {
       checkout scm
 
-      if (LOADED) {
+      if (env.USE_GLOBAL_LIB) {
         slackInst = new slack()
         templateInst = new template()
         convoxInst = new convox()
