@@ -5,4 +5,4 @@ node:
     - "80"
   environment:
     - NODE_ENV=production
-    - NODE_CONFIG={"datastore":{"dbUrl":"${mongo_url}"},"server":{"url":"${server_name}","port":"${server_port}"}}
+    - NODE_CONFIG={"datastore":{"dbUrl":"${mongo_url}"},"server":{"url":"${server_url}","port":"${server_port}"}}
