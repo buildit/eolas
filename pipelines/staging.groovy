@@ -1,5 +1,5 @@
 @Library('buildit')
-def LOADED = env.USE_GLOBAL_LIB
+def LOADED = true
 
 node {
   withEnv(["PATH+NODE=${tool name: 'latest', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
@@ -15,7 +15,7 @@ node {
           sh "git clean -ffdx"
         }
 
-        if (LOADED) {
+        if (env.USE_GLOBAL_LIB) {
           ecrInst = new ecr()
           gitInst = new git()
           npmInst = new npm()
