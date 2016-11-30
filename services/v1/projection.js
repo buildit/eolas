@@ -26,7 +26,7 @@ exports.getProjectionByName = function (req, res) {
     if (aProjection.length < 1) {
       logger.debug('getProjectionByName -> Not Found');
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project ${projectName}`));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find a projection defined for project ${projectName}`));
     } else {
       res.send(aProjection[0]);
     }
