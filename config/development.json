@@ -1,17 +1,1 @@
-{
-   "datastore": {
-      "dbUrl": "mongodb://localhost:27017",
-      "context": "development",
-      "rootDB": "buildit"
-   },
-   "server": {
-      "url": "localhost",
-      "port": 6565
-   },
-   "projectSource": {
-     "system": "Harvest",
-     "url": "https://builditglobal.harvestapp.com/",
-     "encodedUser": "cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"
-   },
-   "log-level": "DEBUG"
-}
+{"datastore":{"dbUrl":"mongodb://localhost:27017","context":"development","rootDB":"buildit"},"server":{"url":"localhost","port":6565},"projectSource":{"system":"Harvest","url":"https://builditglobal.harvestapp.com/","encodedUser":"cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"},"log-level":"DEBUG"}
