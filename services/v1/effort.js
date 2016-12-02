@@ -19,15 +19,15 @@ exports.getEffortByName = function (req, res) {
   CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aDemand = yield col.find({name: projectName}, {_id: 0, effort: 1}).toArray();
+    var anEffortSystem = yield col.find({name: projectName}, {_id: 0, effort: 1}).toArray();
     db.close();
 
-    if (aDemand.length < 1) {
+    if (anEffortSystem.length < 1) {
       logger.debug("getEffortByName -> Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project ${projectName}`));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find an effort system defined for project ${projectName}`));
     } else {
-      res.send(aDemand[0]);
+      res.send(anEffortSystem[0]);
     }
   }).catch(function(err) {
     logger.debug("getEffortByName -> ERROR");

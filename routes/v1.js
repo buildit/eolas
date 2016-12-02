@@ -9,6 +9,7 @@ const projectSummary = require('../services/v1/projectSummary');
 const demand = require('../services/v1/demand');
 const defect = require('../services/v1/defect');
 const effort = require('../services/v1/effort');
+const event = require('../services/v1/event');
 const projection = require('../services/v1/projection');
 const summaryData = require('../services/v1/summaryData');
 
@@ -25,6 +26,7 @@ Router.delete('/project/:name', project.deleteProjectByName);
 Router.get('/project/:name/demand', demand.getDemandByName);
 Router.get('/project/:name/defect', defect.getDefectByName);
 Router.get('/project/:name/effort', effort.getEffortByName);
+Router.get('/project/:name/event', event.getEventByName);
 Router.get('/project/:name/projection', projection.getProjectionByName);
 Router.put('/project/:name/projection', projection.updateProjectionByName);
 

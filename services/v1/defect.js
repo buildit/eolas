@@ -19,16 +19,15 @@ exports.getDefectByName = function (req, res) {
   CO(function*() {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aDefect = yield col.find({name: projectName}, {_id: 0, defect: 1}).toArray();
+    var aDefectSystem = yield col.find({name: projectName}, {_id: 0, defect: 1}).toArray();
     db.close();
-    logger.debug(JSON.stringify(aDefect));
 
-    if (aDefect.length < 1) {
+    if (aDefectSystem.length < 1) {
       logger.debug("getDefectByName -> Not Found");
       res.status(HttpStatus.NOT_FOUND);
-      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project ${projectName}`));
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find a defect system defined for project ${projectName}`));
     } else {
-      res.send(aDefect[0]);
+      res.send(aDefectSystem[0]);
     }
   }).catch(function(err) {
     logger.debug("getDefectByName -> ERROR");
