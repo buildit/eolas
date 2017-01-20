@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eolas-deployment
+  labels:
+    component: "eolas"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: "eolas"
+    spec:
+      containers:
+        - name: eolas
+          image: "builditdigital/eolas:latest"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          env:
+              - name: NODE_ENV
+                value: staging
+              - name: NODE_CONFIG
+                value: '{"datastore":{"dbUrl":"mongodb://mongo-staging-mongodb:27017", "context": "staging"},"server":{"url":"localhost","port":"80"}}'
+          command:
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eolas-svc
+  labels:
+    component: "eolas"
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 80
+  selector:
+    component: "eolas"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: eolas-ingress
+spec:
+  rules:
+  - host: eolas.kube.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: eolas-svc
+          servicePort: 80
