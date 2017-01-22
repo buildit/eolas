@@ -1,0 +1,27 @@
+# Default values for eolas.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: builditdigital/eolas
+  tag: latest
+  pullPolicy: Always
+service:
+  name: eolas
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+  hostName:
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+app:
+  dbUrl: mongodb://mongo-staging-mongodb:27017
+  context: staging
+  # do we need it?
+  nodeEnv: staging
+

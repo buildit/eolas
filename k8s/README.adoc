@@ -1,0 +1,88 @@
+== Example job for EC2:
+----
+podTemplate(label: 'nodeapp',
+            containers: [
+                containerTemplate(name: 'nodejs-builder', image: 'builditdigital/node-builder', ttyEnabled: true, command: 'cat', privileged: true),
+                containerTemplate(name: 'aws', image: 'cgswong/aws', ttyEnabled: true, command: 'cat'),
+                containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
+                containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', ttyEnabled: true, command: 'cat')],
+            volumes: [
+                hostPathVolume(mountPath: '/var/gitrepo', hostPath: '/Users/romansafronov/dev/projects/digitalrig-acceptance-tests'),
+                hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) {
+    node('nodeapp') {
+
+        def nextVersion = new Date().time as String
+        container('nodejs-builder') {
+            stage('Checkout') {
+                git(url: 'https://github.com/buildit/Eolas.git')
+            }
+            stage('Build') {
+                sh 'npm install && npm prune && npm shrinkwrap'
+                sh "NODE_ENV='staging' VERSION='snapshot' DB_URL='tbd' SERVER_URL='tbd' SERVER_PORT='123' LOG_LEVEL='INFO' npm run package"
+                sh "cd dist && npm install --production"
+            }
+        }
+
+        def loginCmd = ''
+        container('aws') {
+            loginCmd = sh script: 'aws ecr get-login --region=us-east-1', returnStdout: true
+        }
+
+        container('docker') {
+            stage('Package') {
+                sh loginCmd
+                sh "docker build -t test/eolas:${nextVersion} ./src/test/apps/node-docker"
+                sh "docker tag rsafronov-k8s-sample-app:${nextVersion} 006393696278.dkr.ecr.us-east-1.amazonaws.com/eolas:${nextVersion}"
+                sh "docker push 006393696278.dkr.ecr.us-east-1.amazonaws.com/eolas:${nextVersion}"
+            }
+        }
+        container('kubectl') {
+            stage('Deploy') {
+                sh "kubectl set image deployment/eolas-deployment eolas=006393696278.dkr.ecr.us-east-1.amazonaws.com/eolas:$nextVersion"
+                sh 'kubectl rollout status deployment/eolas-deployment'
+            }
+        }
+  }
+}
+
+----
+
+== Example job for minikube
+----
+podTemplate(label: 'nodeapp',
+            containers: [
+                containerTemplate(name: 'nodejs-builder', image: 'builditdigital/node-builder', ttyEnabled: true, command: 'cat', privileged: true),
+                containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
+                containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', ttyEnabled: true, command: 'cat')],
+            volumes: [
+                hostPathVolume(mountPath: '/var/gitrepo', hostPath: '/Users/romansafronov/dev/projects/digitalrig-acceptance-tests'),
+                hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) {
+    node('nodeapp') {
+
+        def nextVersion = new Date().time as String
+        container('nodejs-builder') {
+            stage('Checkout') {
+                git(url: 'https://github.com/buildit/Eolas.git')
+            }
+            stage('Build') {
+                sh 'npm install && npm prune && npm shrinkwrap'
+                sh "NODE_ENV='staging' VERSION='snapshot' DB_URL='tbd' SERVER_URL='tbd' SERVER_PORT='123' LOG_LEVEL='INFO' npm run package"
+                sh "cd dist && npm install --production"
+            }
+        }
+
+        container('docker') {
+            stage('Package') {
+                sh "docker build -t builditdigital/eolas:${nextVersion} ."
+            }
+        }
+        container('kubectl') {
+            stage('Deploy') {
+                sh "kubectl set image deployment/eolas-deployment builditdigital/eolas:$nextVersion"
+                sh 'kubectl rollout status deployment/eolas-deployment'
+            }
+        }
+  }
+}
+----
+

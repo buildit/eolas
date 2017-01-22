@@ -1,0 +1,12 @@
+image:
+  repository: builditdigital/eolas
+  tag: "latest"
+  pullPolicy: IfNotPresent
+service:
+  hostName: eolas.kube.local
+app:
+  dbUrl: mongodb://mongo-staging-mongodb:27017
+  context: staging
+  # do we need it?
+  nodeEnv: staging
+

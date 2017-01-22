@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.service.internalPort }}
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.app.nodeEnv }}
+        - name: NODE_CONFIG
+          value: '{"datastore":{"dbUrl":{{ .Values.app.dbUrl | quote }}, "context": {{ .Values.app.context | quote }}},"server":{"url":{{ .Values.service.hostName | quote }},"port":"80"}}'
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
