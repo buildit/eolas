@@ -1,0 +1,12 @@
+image:
+  repository: 006393696278.dkr.ecr.us-east-1.amazonaws.com/eolas
+  tag: "latest"
+  pullPolicy: Always
+service:
+  hostName: eolas.riglet
+app:
+  dbUrl: mongodb://mongo-staging-mongodb:27017
+  context: staging
+  # do we need it?
+  nodeEnv: staging
+
