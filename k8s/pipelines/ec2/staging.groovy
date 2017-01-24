@@ -30,8 +30,8 @@ podTemplate(label: 'nodeapp',
             }
             container('nodejs-builder') {
                 stage('Checkout') {
-                    //checkout scm
-                    git(url: 'https://github.com/buildit/Eolas.git', branch: 'k8s')
+                    checkout scm
+                    //git(url: 'https://github.com/buildit/Eolas.git', branch: 'k8s')
 
                     // global for exception handling
                     shortCommitHash = gitInst.getShortCommit()
