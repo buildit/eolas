@@ -10,7 +10,7 @@ logger.setLevel(config.get('log-level'));
 
 describe('Harvest Tests', function() {
   it('Test Get Project List', function() {
-    this.timeout(5000);
+    this.timeout(10000);
 
     return harvest.getAvailableProjectList()
       .then(function(response) {
