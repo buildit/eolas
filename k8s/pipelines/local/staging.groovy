@@ -6,7 +6,7 @@ podTemplate(label: 'nodeapp',
                 containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'builditdigital/kube-utils', ttyEnabled: true, command: 'cat')],
         volumes: [
-                hostPathVolume(mountPath: '/var/projects', hostPath: '/Users/XXX/dev/projects'),
+                hostPathVolume(mountPath: '/var/projects', hostPath: '/Users/romansafronov/dev/projects'),
                 hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) {
   node('nodeapp') {
 
@@ -31,7 +31,8 @@ podTemplate(label: 'nodeapp',
       }
       container('nodejs-builder') {
         stage('Checkout') {
-          git(url: '/var/projects/Eolas', branch: 'k8s')
+          checkout scm
+          //git(url: '/var/projects/Eolas', branch: 'k8s')
           //'https://github.com/buildit/Eolas.git') // fixme: checkout scm
 
           // global for exception handling
