@@ -149,7 +149,6 @@ describe('Event Listing Services Tests', function() {
   });
 
   it('Test Get Project Event', function(done) {
-    this.timeout(5000);
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       params: {'name': UNITTESTPROJECT}
