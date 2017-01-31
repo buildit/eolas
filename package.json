@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "accept": "echo '=> accept' && mocha test_accept -R spec",
     "genConfig": "echo '=> generating local config file' && gulp gen_config",
     "lint": "echo '=> linting' && eslint api_doc/ routes/ services/ test/ test_accept/ *.js",
     "package": "echo '=> packaging for deployment' && gulp package",
     "security": "echo '=> nsp testing' && nsp check --output summary",
-    "test": "echo '=> testing' && nyc mocha test -R spec",
+    "test": "echo '=> testing' && nyc mocha test -R spec --timeout 10000",
     "validate": "echo '=> validating Eolas' && npm run lint && npm run test && npm run security",
     "preversion": "npm run validate",
     "version": "git add -A",
@@ -26,6 +27,7 @@
   "author": "buildit",
   "license": "MIT",
   "devDependencies": {
+    "nodemon": "^1.11.0",
     "chakram": "^1.4.0",
     "del": "^2.2.1",
     "eslint": "^3.3.1",
