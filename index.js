@@ -13,9 +13,18 @@ logger.setLevel(Config.get('log-level'));
 
 const app = Express();
 
+app.use((req, res, next) => {
+  if(req.method === 'POST' && !req.get('X-User')) {
+    res.sendStatus(401);
+  } else {
+    next();
+  }
+});
+
 app.use('/', middleware);
 app.use('/ping', about);
 app.use('/v1', v1Route);
+
 
 const port = Config.get('server.port');
 app.listen(port, function () {
