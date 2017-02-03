@@ -12,6 +12,8 @@ service:
   externalPort: 80
   internalPort: 80
   hostName:
+  #Heimdall service url (internal call is made by edge proxy)
+  #authUrl:
 resources:
   limits:
     cpu: 100m
@@ -24,4 +26,6 @@ app:
   context: staging
   # do we need it?
   nodeEnv: staging
+  # enable security middleware
+  #auth: true
 

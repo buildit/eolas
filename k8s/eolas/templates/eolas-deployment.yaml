@@ -29,6 +29,6 @@ spec:
         - name: NODE_ENV
           value: {{ .Values.app.nodeEnv }}
         - name: NODE_CONFIG
-          value: '{"datastore":{"dbUrl":{{ .Values.app.dbUrl | quote }}, "context": {{ .Values.app.context | quote }}},"server":{"url":{{ .Values.service.hostName | quote }},"port":"80"}}'
+          value: '{"datastore":{"dbUrl":{{ .Values.app.dbUrl | quote }}, "context": {{ .Values.app.context | quote }}}, "auth": {{ .Values.app.auth | default "" | quote }}, "server":{"url":{{ .Values.service.hostName | quote }},"port":"80"}}'
         resources:
 {{ toYaml .Values.resources | indent 12 }}

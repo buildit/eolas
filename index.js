@@ -12,14 +12,18 @@ const logger = Log4js.getLogger();
 logger.setLevel(Config.get('log-level'));
 
 const app = Express();
+const publicMethods = ['GET', 'OPTIONS'];
 
-app.use((req, res, next) => {
-  if(req.method === 'POST' && !req.get('X-User')) {
-    res.sendStatus(401);
-  } else {
-    next();
-  }
-});
+// access control middleware (allows RO access to not authenticated clients)
+if(Config.auth) {
+  app.use((req, res, next) => {
+    if(publicMethods.includes(req.method) || req.get('X-User')) {
+      next();
+    } else {
+      res.sendStatus(401);
+    }
+  });
+}
 
 app.use('/', middleware);
 app.use('/ping', about);

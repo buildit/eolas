@@ -4,6 +4,11 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
+  annotations:
+    ingress.kubernetes.io/enable-cors: "true"
+    {{- if .Values.service.authUrl }}
+    ingress.kubernetes.io/auth-url: {{ .Values.service.authUrl }}
+    {{- end }}
 spec:
   rules:
   - host: {{ .Values.service.hostName | quote }}
