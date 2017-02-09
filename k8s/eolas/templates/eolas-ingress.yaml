@@ -8,6 +8,7 @@ metadata:
     ingress.kubernetes.io/enable-cors: "true"
     {{- if .Values.service.authUrl }}
     ingress.kubernetes.io/auth-url: {{ .Values.service.authUrl }}
+    ingress.kubernetes.io/auth-response-headers: X-User
     {{- end }}
 spec:
   rules:
