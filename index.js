@@ -20,6 +20,7 @@ if(Config.auth) {
     if(publicMethods.includes(req.method) || req.get('X-User')) {
       next();
     } else {
+      logger.info("No authentication header -> return 401");
       res.sendStatus(401);
     }
   });

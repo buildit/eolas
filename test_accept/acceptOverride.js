@@ -1,6 +1,7 @@
 const config = require('config');
 const chakram = require('chakram');
 const expect = chakram.expect;
+require('./clientConfigurer');
 
 var url;
 

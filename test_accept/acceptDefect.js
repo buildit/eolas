@@ -4,6 +4,7 @@ const expect = chakram.expect;
 const log4js = require('log4js');
 const HttpStatus = require('http-status-codes');
 const utils = require('../util/utils');
+require('./clientConfigurer');
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
