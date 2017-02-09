@@ -4,7 +4,7 @@ image:
   pullPolicy: IfNotPresent
 service:
   hostName: eolas.kube.local
-  authUrl: http://heimdall-heimdall.default.svc.cluster.local/valid?unauthCode=200
+  authUrl: http://heimdall-staging-heimdal.default.svc.cluster.local/valid?unauthCode=200
 app:
   dbUrl: mongodb://mongo-staging-mongodb:27017
   context: staging
