@@ -24,14 +24,15 @@ podTemplate(label: 'nodeapp',
                 gitUrl = "https://github.com/buildit/Eolas.git"
                 appUrl = "http://eolas.kube.local"
                 mongoUrl = "mongodb://mongo-staging-mongodb:27017"
-                dockerRegistry = "006393696278.dkr.ecr.us-east-1.amazonaws.com"
+                region = 'us-east-1'
+                dockerRegistry = "006393696278.dkr.ecr.${region}.amazonaws.com"
                 image = "$dockerRegistry/$appName"
                 deployment = "eolas-staging"
             }
             container('nodejs-builder') {
                 stage('Checkout') {
                     checkout scm
-                    //git(url: 'https://github.com/buildit/Eolas.git', branch: 'k8s')
+                    //git(url: '/var/projects/Eolas', branch: 'spike/security_perimiter')
 
                     // global for exception handling
                     shortCommitHash = gitInst.getShortCommit()
@@ -55,7 +56,7 @@ podTemplate(label: 'nodeapp',
             }
 
             container('aws') {
-                loginCmd = sh script: 'aws ecr get-login --region=us-east-1', returnStdout: true
+                loginCmd = sh script: "aws ecr get-login --region=${region}", returnStdout: true
             }
 
             container('docker') {
@@ -73,7 +74,7 @@ podTemplate(label: 'nodeapp',
 
             container('kubectl') {
                 stage('Deploy To K8S') {
-                    // fixme: need to create deployment if it does not exist
+                    sh "helm ls -q | grep eolas-staging || helm install ./eolas -f vars_local.yaml -n eolas-staging"
                     sh "cd k8s && helm upgrade $deployment ./eolas -f vars_ec2.yaml --set image.tag=$tag"
                     sh "kubectl rollout status deployment/$deployment-eolas"
                 }
