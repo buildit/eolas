@@ -81,11 +81,7 @@ podTemplate(label: 'nodeapp',
 
             container('docker') {
                 stage('Promote Build to latest') {
-                    // fixme
-                    /*docker.withRegistry(registry) {
-                        image.push("latest")
-                    }*/
-                    sh "docker tag builditdigital/$appName:$tag $image:latest"
+                    sh "docker tag $image:$tag $image:latest"
                     if (sendNotifications) slackInst.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
                 }
             }

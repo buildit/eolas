@@ -17,5 +17,5 @@
 
 ### Todos
 
-1. EC2 support
+1. Automate test data deployment (required by synapse acceptance test pack)
 2. Add temporary deployment / rollback to not break staging
