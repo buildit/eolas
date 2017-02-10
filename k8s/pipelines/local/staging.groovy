@@ -66,7 +66,7 @@ podTemplate(label: 'nodeapp',
 
             container('kubectl') {
                 stage('Deploy To K8S') {
-                    sh "helm ls -q | grep eolas-staging || helm install ./k8s/eolas -f ./k8s/vars_local.yaml -n eolas-staging"
+                    sh "helm ls -q | grep $deployment || helm install ./k8s/eolas -f ./k8s/vars_local.yaml -n $deployment"
                     sh "helm upgrade $deployment ./k8s/eolas -f ./k8s/vars_local.yaml --set image.tag=$tag"
                     sh "kubectl rollout status deployment/$deployment-eolas"
                 }
