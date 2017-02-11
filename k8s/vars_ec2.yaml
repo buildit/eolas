@@ -9,4 +9,5 @@ app:
   context: staging
   # do we need it?
   nodeEnv: staging
-
+  # TODO: Need to enable it back after synapse acceptance test fix
+  auth: false

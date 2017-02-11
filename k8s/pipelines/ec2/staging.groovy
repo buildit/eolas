@@ -32,7 +32,7 @@ podTemplate(label: 'nodeapp',
             container('nodejs-builder') {
                 stage('Checkout') {
                     checkout scm
-                    //git(url: '/var/projects/Eolas', branch: 'spike/security_perimiter')
+                    //git(url: 'https://github.com/buildit/Eolas.git', branch: 'spike/security_perimiter')
 
                     // global for exception handling
                     shortCommitHash = gitInst.getShortCommit()
