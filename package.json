@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "accept": "echo '=> accept' && mocha test_accept -R spec",
+    "accept": "echo '=> accept' && mocha test_accept -R spec --timeout 10000",
     "genConfig": "echo '=> generating local config file' && gulp gen_config",
     "lint": "echo '=> linting' && eslint api_doc/ routes/ services/ test/ test_accept/ *.js",
     "package": "echo '=> packaging for deployment' && gulp package",
