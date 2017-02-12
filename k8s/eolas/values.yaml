@@ -16,10 +16,10 @@ service:
   #authUrl:
 resources:
   limits:
-    cpu: 100m
+    cpu: 500m
     memory: 128Mi
   requests:
-    cpu: 50m
+    cpu: 100m
     memory: 64Mi
 app:
   dbUrl: mongodb://mongo-staging-mongodb:27017
