@@ -20,7 +20,7 @@ spec:
           serviceName: {{ template "fullname" . }}
           servicePort: {{ .Values.service.externalPort }}
 {{- end }}
-{{- if .Values.service.hostName }}
+{{- if .Values.service.publicHostName }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -34,7 +34,7 @@ metadata:
     {{- end }}
 spec:
   rules:
-  - host: {{ .Values.service.hostName | quote }}
+  - host: {{ .Values.service.publicHostName | quote }}
     http:
       paths:
       - path: /
