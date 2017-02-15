@@ -3,12 +3,12 @@ image:
   tag: "latest"
   pullPolicy: IfNotPresent
 service:
-  hostName: eolas.kube.local
-  authUrl: http://heimdall-staging-heimdal.default.svc.cluster.local/valid?unauthCode=200
+  hostName: eolas.prod.kube.local
+  authUrl: http://heimdall-prod-heimdall.public.svc.cluster.local/valid?unauthCode=200
 app:
   dbUrl: mongodb://mongo-staging-mongodb:27017
-  context: staging
+  context: prod
   # do we need it?
-  nodeEnv: staging
+  nodeEnv: production
   auth: true
 

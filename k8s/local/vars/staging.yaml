@@ -1,0 +1,14 @@
+image:
+  repository: builditdigital/eolas
+  tag: "latest"
+  pullPolicy: IfNotPresent
+service:
+  hostName: eolas.stage.kube.local
+  authUrl: http://heimdall-staging-heimdal.default.svc.cluster.local/valid?unauthCode=200
+app:
+  dbUrl: mongodb://mongo-staging-mongodb:27017
+  context: staging
+  # do we need it?
+  nodeEnv: staging
+  auth: true
+

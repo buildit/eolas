@@ -3,11 +3,10 @@ def LOADED = true
 podTemplate(label: 'nodeapp',
         containers: [
                 containerTemplate(name: 'nodejs-builder', image: 'builditdigital/node-builder', ttyEnabled: true, command: 'cat', privileged: true),
+                containerTemplate(name: 'aws', image: 'cgswong/aws', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'builditdigital/kube-utils', ttyEnabled: true, command: 'cat')],
-        volumes: [
-                hostPathVolume(mountPath: '/var/projects', hostPath: '/Users/romansafronov/dev/projects'),
-                hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) {
+        volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]) {
     node('nodeapp') {
 
         currentBuild.result = "SUCCESS"
@@ -20,20 +19,23 @@ podTemplate(label: 'nodeapp',
                 npmInst = new npm()
                 slackInst = new slack()
 
+                buildNumber = env.BUILD_NUMBER
                 appName = "eolas"
-                slackChannel = "synapse"
+                cloud = "ec2"
+                env = "staging"
+                slackChannel = "eolas"
                 gitUrl = "https://github.com/buildit/Eolas.git"
-                appUrl = "http://eolas.kube.local"
+                region = 'us-east-1'
+                dockerRegistry = "006393696278.dkr.ecr.${region}.amazonaws.com"
+                image = "$dockerRegistry/$appName"
+                deployment = "${appName}-${env}"
+
                 mongoUrl = "mongodb://mongo-staging-mongodb:27017"
-                dockerRepo = "builditdigital"
-                image = "$dockerRepo/$appName"
-                deployment = "eolas-staging"
             }
             container('nodejs-builder') {
                 stage('Checkout') {
                     checkout scm
-                    //git(url: '/var/projects/Eolas', branch: 'spike/security_perimiter')
-                    //'https://github.com/buildit/Eolas.git') // fixme: checkout scm
+                    //git(url: 'https://github.com/buildit/Eolas.git', branch: 'spike/security_perimiter')
 
                     // global for exception handling
                     shortCommitHash = gitInst.getShortCommit()
@@ -55,20 +57,32 @@ podTemplate(label: 'nodeapp',
                     sh "cd dist && npm install --production"
                 }
             }
+
+            container('aws') {
+                loginCmd = sh script: "aws ecr get-login --region=${region}", returnStdout: true
+            }
+
             container('docker') {
                 stage('Docker Image Build') {
-                    tag = "${version}-${shortCommitHash}-${env.BUILD_NUMBER}"
+                    tag = "${version}-${shortCommitHash}-${buildNumber}"
                     // Docker pipeline plugin does not work with kubernetes (see https://issues.jenkins-ci.org/browse/JENKINS-39664)
                     sh "docker build -t $image:$tag ."
-                    //ecrInst.authenticate(env.AWS_REGION) FIXME
+                }
+
+                stage('Docker Push') {
+                    sh loginCmd
+                    sh "docker push $image:$tag"
                 }
             }
 
             container('kubectl') {
                 stage('Deploy To K8S') {
-                    sh "helm ls -q | grep $deployment || helm install ./k8s/eolas -f ./k8s/vars_local.yaml -n $deployment"
-                    sh "helm upgrade $deployment ./k8s/eolas -f ./k8s/vars_local.yaml --set image.tag=$tag"
-                    sh "kubectl rollout status deployment/$deployment-eolas"
+                    def deployment = "$appName-$env"
+                    def deploymentObj = "$deployment-$appName".take(24)
+                    def varsFile = "./k8s/${cloud}/vars/${env}.yaml"
+                    sh "helm ls -q | grep $deployment || helm install ./k8s/eolas -f $varsFile -n $deployment"
+                    sh "helm upgrade $deployment ./k8s/eolas -f $varsFile --set image.repository=$image --set image.tag=$tag"
+                    sh "kubectl rollout status deployment/$deploymentObj"
                 }
             }
 
@@ -82,13 +96,14 @@ podTemplate(label: 'nodeapp',
             container('docker') {
                 stage('Promote Build to latest') {
                     sh "docker tag $image:$tag $image:latest"
-                    if (sendNotifications) slackInst.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to <${appUrl}|${appUrl}>\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
+                    sh "docker push $image:latest"
+                    if (sendNotifications) slackInst.notify("Deployed to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> has been deployed to ${env}\n\n${commitMessage}", "good", "http://i3.kym-cdn.com/entries/icons/square/000/002/230/42.png", slackChannel)
                 }
             }
         }
         catch (err) {
             currentBuild.result = "FAILURE"
-            if (sendNotifications) slackInst.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to <${appUrl}|${appUrl}>", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
+            if (sendNotifications) slackInst.notify("Error while deploying to Staging", "Commit <${gitUrl}/commits/${shortCommitHash}|${shortCommitHash}> failed to deploy to ${env}", "danger", "http://i2.kym-cdn.com/entries/icons/original/000/002/325/Evil.jpg", slackChannel)
             throw err
         }
     }
