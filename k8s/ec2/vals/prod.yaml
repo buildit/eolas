@@ -3,11 +3,11 @@ image:
   tag: "latest"
   pullPolicy: Always
 service:
-  hostName: eolas.stage.riglet
-  authUrl: http://heimdall-staging-heimdal.default.svc.cluster.local/valid?unauthCode=200
+  publicHostName: eolas.prod.apps.k8s.riglet.io
+  authUrl: http://heimdall-prod-heimdall.public.svc.cluster.local/valid?unauthCode=200
 app:
   dbUrl: mongodb://mongo-staging-mongodb:27017
-  context: staging
+  context: prod
   # do we need it?
-  nodeEnv: staging
+  nodeEnv: production
   auth: true
