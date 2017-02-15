@@ -6,7 +6,7 @@ service:
   publicHostName: eolas.prod.apps.k8s.riglet.io
   authUrl: http://heimdall-prod-heimdall.public.svc.cluster.local/valid?unauthCode=200
 app:
-  dbUrl: mongodb://mongo-staging-mongodb:27017
+  dbUrl: mongodb://mongo-staging-mongodb.default.svc.cluster.local:27017
   context: prod
   # do we need it?
   nodeEnv: production

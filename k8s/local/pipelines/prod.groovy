@@ -27,7 +27,7 @@ podTemplate(label: 'eolas',
             container('nodejs-builder') {
                 stage('Checkout') {
                     checkout scm
-                    //git(url: '/var/projects/eolas', branch: 'spike/security_perimiter')
+                    //git(url: '/var/projects/eolas', branch: 'spike/security_perimeter')
                 }
             }
             container('kubectl') {
