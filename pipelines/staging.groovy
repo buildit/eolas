@@ -92,7 +92,7 @@ node {
         ymlData = templateInst.transform(readFile("docker-compose.yml.template"), [tag: tag, registry_base: registryBase, mongo_url: mongoUrl, db_context: dbContext, server_url: serverUrl, server_port: serverPort])
         writeFile(file: tmpFile, text: ymlData)
 
-        sh "convox login ${env.CONVOX_RACKNAME} --password ${env.CONVOX_PASSWORD}"
+        convoxInst.login("${env.CONVOX_RACKNAME}")
         convoxInst.ensureApplicationCreated("${appName}-staging")
         sh "convox env set NODE_ENV=staging --app ${appName}-staging"
         sh "convox deploy --app ${appName}-staging --description '${tag}' --file ${tmpFile} --wait"
