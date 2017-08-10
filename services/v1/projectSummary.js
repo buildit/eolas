@@ -36,7 +36,7 @@ function getProjectSummaryAll (req, res) {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
     var projectList = yield col.find({},
-      {_id: 0, name: 1, program: 1, portfolio: 1, status: 1, description: 1, ragStatus: 1}).toArray();
+      {_id: 0, name: 1, program: 1, portfolio: 1, status: 1, description: 1}).toArray();
     db.close();
     res.send(projectList);
   }).catch(function(err) {

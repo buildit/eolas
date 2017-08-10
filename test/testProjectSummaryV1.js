@@ -34,7 +34,7 @@ describe('Project Services Summary Array Tests', function() {
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
-          ragStatus: 'green',
+          status: 'green',
           demand: {},
           defect: {},
           effort: {},
@@ -61,7 +61,7 @@ describe('Project Services Summary Array Tests', function() {
           description: "A set of basic test data to be used to validate behavior of client systems.",
           startDate: null,
           endDate: null,
-          ragStatus: 'amber',
+          status: 'amber',
           demand: {},
           defect: {},
           effort: {},
@@ -88,7 +88,7 @@ describe('Project Services Summary Array Tests', function() {
       should(body[0]).not.have.property('_id');
       should(body[0]).have.property('name');
       should(body[0]).have.property('description');
-      should(body[0]).have.property('ragStatus');
+      should(body[0]).have.property('status');
       done();
     });
 
