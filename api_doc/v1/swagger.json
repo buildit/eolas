@@ -1,1123 +1,1192 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "Eolas",
-        "description": "REST based service to provide summarized metrics for visualization and analysis.\n"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Eolas",
+    "description": "REST based service to provide summarized metrics for visualization and analysis.\n"
+  },
+  "host": "localhost",
+  "basePath": "/v1",
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Ping"
     },
-    "host": "localhost",
-    "basePath": "/v1",
-    "schemes": [
-        "http"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "tags": [
-        {
-            "name": "Ping"
-        },
-        {
-            "name": "Documentation"
-        },
-        {
-            "name": "Project"
-        },
-        {
-            "name": "Demand"
-        },
-        {
-            "name": "Defect"
-        },
-        {
-            "name": "Effort"
-        },
-        {
-            "name": "Projection"
-        }
-    ],
-    "paths": {
-        "/ping": {
-            "get": {
-                "tags": [
-                    "Ping"
-                ],
-                "description": "Verifies the service is responsive.  Returns the contents of the deployed service's configuration file.\n",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "App Configuration Data",
-                            "type": "object",
-                            "example": {
-                                "myProperty": "value"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ping/deep": {
-            "get": {
-                "tags": [
-                    "Ping"
-                ],
-                "description": "Attempts to connect to external service providers and determine their state.  Will return a collection of objects that represent the path to that external system and some basic information about that system (typically version).  If the system is unreachable, the information will indicate the error encountered while testing the connection.\n",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/ExternalSystem"
-                        }
-                    }
-                }
-            }
-        },
-        "/doc": {
-            "get": {
-                "tags": [
-                    "Documentation"
-                ],
-                "description": "Serves up the Swagger stype API documentation.\n",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "Swagger Documentation",
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
-        "/project": {
-            "get": {
-                "tags": [
-                    "Project"
-                ],
-                "description": "Provides an array of project data in summary form.\n",
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/ProjectSummary"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}": {
-            "get": {
-                "tags": [
-                    "Project"
-                ],
-                "description": "Provides a complete project object.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Project"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Project"
-                ],
-                "description": "create a project\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Project object to be created",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Project"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Successful creation of a project",
-                        "schema": {
-                            "title": "url",
-                            "type": "string",
-                            "example": "http://eolas.com/v1/project/MyProject"
-                        }
-                    },
-                    "400": {
-                        "description": "The project named in the parameter does not match the project name in the body of the request.",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "403": {
-                        "description": "Project already exists.  Duplicates not allowed.",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Project"
-                ],
-                "description": "Update an existing.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Project object to be updated",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Project"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "url",
-                            "type": "string",
-                            "example": "http://eolas.com/v1/project/MyProject"
-                        }
-                    },
-                    "400": {
-                        "description": "The project named in the parameter does not match the project name in the body of the request.",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "404": {
-                        "description": "Project does not exist, and thus cannot be updated.",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Project"
-                ],
-                "description": "Provides a complete project object.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "title": "OK",
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/demand": {
-            "get": {
-                "tags": [
-                    "Demand"
-                ],
-                "description": "Provides the demand resource of a project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Demand"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/defect": {
-            "get": {
-                "tags": [
-                    "Defect"
-                ],
-                "description": "Provides the defect resource of a project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Defect"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/effort": {
-            "get": {
-                "tags": [
-                    "Effort"
-                ],
-                "description": "Provides the effort resource of a project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Effort"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/projection": {
-            "get": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Provides the projection resource of a project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/Projection"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Update the projection resource of a project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Projection object to be updated",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Projection"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response"
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/demand/summary": {
-            "get": {
-                "tags": [
-                    "Demand"
-                ],
-                "description": "Provides a dated array.  The array lists the sum of the number of stories in that status on that day.  The status values correspond to the values listed in the demand.flow array for the project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/DemandSummary"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/defect/summary": {
-            "get": {
-                "tags": [
-                    "Defect"
-                ],
-                "description": "Provides a dated array.  The array lists the sum of the number of active defects in that severity on that day.  The severity values correspond to the values listed in the defect.severity array for the project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/DefectSummary"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/project/{name}/effort/summary": {
-            "get": {
-                "tags": [
-                    "Effort"
-                ],
-                "description": "Provides a dated array.  The array lists the sum of the number of people booking time to the project, seperated by role.  The effort values correspond to the values listed in the effort.role array for the project.\n",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "type": "string",
-                        "required": true,
-                        "description": "The name of the Project to act upon."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/EffortSummary"
-                        }
-                    },
-                    "404": {
-                        "description": "Project was not found",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorModel"
-                        }
-                    }
-                }
-            }
-        }
+    {
+      "name": "Documentation"
     },
-    "definitions": {
-        "ErrorModel": {
-            "type": "object",
-            "required": [
-                "statusCode",
-                "message"
-            ],
-            "properties": {
-                "statusCode": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "ExternalSystem": {
-            "type": "object",
-            "required": [
-                "externalSystemName",
-                "externalSystemInformation"
-            ],
-            "properties": {
-                "externalSystemName": {
-                    "type": "string",
-                    "example": {
-                        "data store url": "DataStore"
-                    }
-                },
-                "externalSystemInformation": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/ExternalInformation"
-                    }
-                }
-            }
-        },
-        "ExternalInformation": {
-            "type": "object",
-            "required": [
-                "externalSystemPath",
-                "externalSystemInformation"
-            ],
-            "properties": {
-                "externalSystemPath": {
-                    "type": "string",
-                    "example": {
-                        "data store url": "mongodb://localhost:27017"
-                    }
-                },
-                "externalSystemInformation": {
-                    "type": "string",
-                    "example": {
-                        "data store version": "V1.0"
-                    }
-                }
-            }
-        },
-        "ProjectSummary": {
-            "type": "object",
-            "required": [
-                "name",
-                "program",
-                "portfolio",
-                "description",
-                "startDate",
-                "endDate",
-                "externalReference"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Test Project"
-                },
-                "program": {
-                    "type": "string",
-                    "example": "A Program"
-                },
-                "portfolio": {
-                    "type": "string",
-                    "example": "A Portfolio"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "This is a sample project summary"
-                },
-                "startDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-01-01T00:00:00.000Z"
-                },
-                "endDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "externalReference": {
-                    "type": "string",
-                    "example": 123456789
-                }
-            }
-        },
-        "Project": {
-            "type": "object",
-            "required": [
-                "name",
-                "program",
-                "portfolio",
-                "description",
-                "status",
-                "startDate",
-                "endDate",
-                "externalReference",
-                "demand",
-                "defect",
-                "effort",
-                "projection"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "Test Project"
-                },
-                "program": {
-                    "type": "string",
-                    "example": "A Program"
-                },
-                "portfolio": {
-                    "type": "string",
-                    "example": "A Portfolio"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "This is a sample project summary"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "Active"
-                },
-                "startDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-01-01T00:00:00.000Z"
-                },
-                "endDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "externalReference": {
-                    "type": "string",
-                    "example": 123456789
-                },
-                "demand": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/Demand"
-                    }
-                },
-                "defect": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/Defect"
-                    }
-                },
-                "effort": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/Effort"
-                    }
-                },
-                "projection": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/Projection"
-                    }
-                }
-            }
-        },
-        "Demand": {
-            "type": "object",
-            "required": [
-                "source",
-                "url",
-                "project",
-                "authPolicy",
-                "userData",
-                "flow"
-            ],
-            "properties": {
-                "source": {
-                    "type": "string",
-                    "example": "JIRA"
-                },
-                "url": {
-                    "type": "string",
-                    "example": "https://myco.atlassian.net/rest/api/latest/"
-                },
-                "project": {
-                    "type": "string",
-                    "example": "MYPROJ"
-                },
-                "authPolicy": {
-                    "type": "string",
-                    "example": "Basic"
-                },
-                "userData": {
-                    "type": "string",
-                    "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
-                },
-                "flow": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/DemandSequence"
-                    }
-                }
-            }
-        },
-        "DemandSequence": {
-            "type": "object",
-            "required": [
-                "sequence",
-                "name"
-            ],
-            "properties": {
-                "sequence": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Backlog"
-                }
-            }
-        },
-        "Defect": {
-            "type": "object",
-            "required": [
-                "source",
-                "url",
-                "project",
-                "authPolicy",
-                "userData",
-                "entryState",
-                "exitState",
-                "severity"
-            ],
-            "properties": {
-                "source": {
-                    "type": "string",
-                    "example": "JIRA"
-                },
-                "url": {
-                    "type": "string",
-                    "example": "https://myco.atlassian.net/rest/api/latest/"
-                },
-                "project": {
-                    "type": "string",
-                    "example": "MYPROJ"
-                },
-                "authPolicy": {
-                    "type": "string",
-                    "example": "Basic"
-                },
-                "userData": {
-                    "type": "string",
-                    "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
-                },
-                "entryState": {
-                    "type": "string",
-                    "example": "Open"
-                },
-                "exitState": {
-                    "type": "string",
-                    "example": "Resolved"
-                },
-                "severity": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/DefectSeverity"
-                    }
-                }
-            }
-        },
-        "DefectSeverity": {
-            "type": "object",
-            "required": [
-                "sequence",
-                "name",
-                "groupWith"
-            ],
-            "properties": {
-                "sequence": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": 1
-                },
-                "groupWith": {
-                    "type": "string",
-                    "example": 2
-                }
-            }
-        },
-        "Effort": {
-            "type": "object",
-            "required": [
-                "source",
-                "url",
-                "project",
-                "authPolicy",
-                "userData",
-                "role"
-            ],
-            "properties": {
-                "source": {
-                    "type": "string",
-                    "example": "JIRA"
-                },
-                "url": {
-                    "type": "string",
-                    "example": "https://myco.atlassian.net/rest/api/latest/"
-                },
-                "project": {
-                    "type": "string",
-                    "example": "MYPROJ"
-                },
-                "authPolicy": {
-                    "type": "string",
-                    "example": "Basic"
-                },
-                "userData": {
-                    "type": "string",
-                    "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
-                },
-                "role": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/EffortRole"
-                    }
-                }
-            }
-        },
-        "EffortRole": {
-            "type": "object",
-            "required": [
-                "name",
-                "groupWith"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "PM"
-                },
-                "groupWith": {
-                    "type": "string",
-                    "example": "BA"
-                }
-            }
-        },
-        "Projection": {
-            "type": "object",
-            "required": [
-                "startDate",
-                "iterationLength",
-                "backlogSize",
-                "targetVelocity",
-                "darkMatterPercentage",
-                "startIterations",
-                "startVelocity",
-                "endIterations",
-                "endVelocity"
-            ],
-            "properties": {
-                "startDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "iterationLength": {
-                    "type": "integer",
-                    "example": 2
-                },
-                "backlogSize": {
-                    "type": "integer",
-                    "example": 175
-                },
-                "targetVelocity": {
-                    "type": "integer",
-                    "example": 20
-                },
-                "darkMatterPercentage": {
-                    "type": "integer",
-                    "example": 10
-                },
-                "startIterations": {
-                    "type": "integer",
-                    "example": 3
-                },
-                "startVelocity": {
-                    "type": "integer",
-                    "example": 10
-                },
-                "endIterations": {
-                    "type": "integer",
-                    "example": 2
-                },
-                "endVelocity": {
-                    "type": "integer",
-                    "example": 10
-                }
-            }
-        },
-        "DemandSummary": {
-            "type": "object",
-            "required": [
-                "projectDate",
-                "status"
-            ],
-            "properties": {
-                "projectDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "status": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/DemandSummaryEntry"
-                    }
-                }
-            }
-        },
-        "DemandSummaryEntry": {
-            "type": "object",
-            "required": [
-                "storyStatus",
-                "count"
-            ],
-            "properties": {
-                "storyStatus": {
-                    "type": "string",
-                    "example": "Backlog"
-                },
-                "count": {
-                    "type": "integer",
-                    "example": 2
-                }
-            }
-        },
-        "DefectSummary": {
-            "type": "object",
-            "required": [
-                "projectDate",
-                "severity"
-            ],
-            "properties": {
-                "projectDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "severity": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/DefectSummaryEntry"
-                    }
-                }
-            }
-        },
-        "DefectSummaryEntry": {
-            "type": "object",
-            "required": [
-                "severity",
-                "count"
-            ],
-            "properties": {
-                "severity": {
-                    "type": "string",
-                    "example": "Major"
-                },
-                "count": {
-                    "type": "integer",
-                    "example": 2
-                }
-            }
-        },
-        "EffortSummary": {
-            "type": "object",
-            "required": [
-                "projectDate",
-                "activity"
-            ],
-            "properties": {
-                "projectDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2016-03-01T00:00:00.000Z"
-                },
-                "activity": {
-                    "type": "object",
-                    "items": {
-                        "$ref": "#/definitions/EffortSummaryEntry"
-                    }
-                }
-            }
-        },
-        "EffortSummaryEntry": {
-            "type": "object",
-            "required": [
-                "role",
-                "count"
-            ],
-            "properties": {
-                "role": {
-                    "type": "string",
-                    "example": "Test"
-                },
-                "count": {
-                    "type": "integer",
-                    "example": 2
-                }
-            }
-        }
+    {
+      "name": "Project"
+    },
+    {
+      "name": "Demand"
+    },
+    {
+      "name": "Defect"
+    },
+    {
+      "name": "Effort"
+    },
+    {
+      "name": "Projection"
     }
+  ],
+  "paths": {
+    "/ping": {
+      "get": {
+        "tags": [
+          "Ping"
+        ],
+        "description": "Verifies the service is responsive.  Returns the contents of the deployed service's configuration file.\n",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "App Configuration Data",
+              "type": "object",
+              "example": {
+                "myProperty": "value"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping/deep": {
+      "get": {
+        "tags": [
+          "Ping"
+        ],
+        "description": "Attempts to connect to external service providers and determine their state.  Will return a collection of objects that represent the path to that external system and some basic information about that system (typically version).  If the system is unreachable, the information will indicate the error encountered while testing the connection.\n",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/ExternalSystem"
+            }
+          }
+        }
+      }
+    },
+    "/doc": {
+      "get": {
+        "tags": [
+          "Documentation"
+        ],
+        "description": "Serves up the Swagger stype API documentation.\n",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "Swagger Documentation",
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "description": "Provides an array of project data in summary form.\n",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/ProjectSummary"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "description": "Provides a complete project object.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Project"
+        ],
+        "description": "create a project\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Project object to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful creation of a project",
+            "schema": {
+              "title": "url",
+              "type": "string",
+              "example": "http://eolas.com/v1/project/MyProject"
+            }
+          },
+          "400": {
+            "description": "The project named in the parameter does not match the project name in the body of the request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "403": {
+            "description": "Project already exists.  Duplicates not allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Project"
+        ],
+        "description": "Update an existing.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Project object to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "url",
+              "type": "string",
+              "example": "http://eolas.com/v1/project/MyProject"
+            }
+          },
+          "400": {
+            "description": "The project named in the parameter does not match the project name in the body of the request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "404": {
+            "description": "Project does not exist, and thus cannot be updated.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Project"
+        ],
+        "description": "Provides a complete project object.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "OK",
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/demand": {
+      "get": {
+        "tags": [
+          "Demand"
+        ],
+        "description": "Provides the demand resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Demand"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/defect": {
+      "get": {
+        "tags": [
+          "Defect"
+        ],
+        "description": "Provides the defect resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Defect"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/effort": {
+      "get": {
+        "tags": [
+          "Effort"
+        ],
+        "description": "Provides the effort resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Effort"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/status": {
+      "get": {
+        "tags": [
+          "Status"
+        ],
+        "description": "Provides the status resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/projection": {
+      "get": {
+        "tags": [
+          "Projection"
+        ],
+        "description": "Provides the projection resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Projection"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Projection"
+        ],
+        "description": "Update the projection resource of a project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Projection object to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Projection"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/demand/summary": {
+      "get": {
+        "tags": [
+          "Demand"
+        ],
+        "description": "Provides a dated array.  The array lists the sum of the number of stories in that status on that day.  The status values correspond to the values listed in the demand.flow array for the project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/DemandSummary"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/defect/summary": {
+      "get": {
+        "tags": [
+          "Defect"
+        ],
+        "description": "Provides a dated array.  The array lists the sum of the number of active defects in that severity on that day.  The severity values correspond to the values listed in the defect.severity array for the project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/DefectSummary"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/project/{name}/effort/summary": {
+      "get": {
+        "tags": [
+          "Effort"
+        ],
+        "description": "Provides a dated array.  The array lists the sum of the number of people booking time to the project, seperated by role.  The effort values correspond to the values listed in the effort.role array for the project.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "The name of the Project to act upon."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/EffortSummary"
+            }
+          },
+          "404": {
+            "description": "Project was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ErrorModel": {
+      "type": "object",
+      "required": [
+        "statusCode",
+        "message"
+      ],
+      "properties": {
+        "statusCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ExternalSystem": {
+      "type": "object",
+      "required": [
+        "externalSystemName",
+        "externalSystemInformation"
+      ],
+      "properties": {
+        "externalSystemName": {
+          "type": "string",
+          "example": {
+            "data store url": "DataStore"
+          }
+        },
+        "externalSystemInformation": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/ExternalInformation"
+          }
+        }
+      }
+    },
+    "ExternalInformation": {
+      "type": "object",
+      "required": [
+        "externalSystemPath",
+        "externalSystemInformation"
+      ],
+      "properties": {
+        "externalSystemPath": {
+          "type": "string",
+          "example": {
+            "data store url": "mongodb://localhost:27017"
+          }
+        },
+        "externalSystemInformation": {
+          "type": "string",
+          "example": {
+            "data store version": "V1.0"
+          }
+        }
+      }
+    },
+    "ProjectSummary": {
+      "type": "object",
+      "required": [
+        "name",
+        "program",
+        "portfolio",
+        "description",
+        "startDate",
+        "endDate",
+        "externalReference"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Test Project"
+        },
+        "program": {
+          "type": "string",
+          "example": "A Program"
+        },
+        "portfolio": {
+          "type": "string",
+          "example": "A Portfolio"
+        },
+        "description": {
+          "type": "string",
+          "example": "This is a sample project summary"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-01-01T00:00:00.000Z"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "externalReference": {
+          "type": "string",
+          "example": 123456789
+        },
+        "status": {
+          "type": "string",
+          "example": "red"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "required": [
+        "name",
+        "program",
+        "portfolio",
+        "description",
+        "status",
+        "startDate",
+        "endDate",
+        "externalReference",
+        "demand",
+        "defect",
+        "effort",
+        "projection"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Test Project"
+        },
+        "program": {
+          "type": "string",
+          "example": "A Program"
+        },
+        "portfolio": {
+          "type": "string",
+          "example": "A Portfolio"
+        },
+        "description": {
+          "type": "string",
+          "example": "This is a sample project summary"
+        },
+        "status": {
+          "type": "string",
+          "example": "red"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-01-01T00:00:00.000Z"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "externalReference": {
+          "type": "string",
+          "example": 123456789
+        },
+        "demand": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/Demand"
+          }
+        },
+        "defect": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/Defect"
+          }
+        },
+        "effort": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/Effort"
+          }
+        },
+        "projection": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/Projection"
+          }
+        }
+      }
+    },
+    "Demand": {
+      "type": "object",
+      "required": [
+        "source",
+        "url",
+        "project",
+        "authPolicy",
+        "userData",
+        "flow"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "example": "JIRA"
+        },
+        "url": {
+          "type": "string",
+          "example": "https://myco.atlassian.net/rest/api/latest/"
+        },
+        "project": {
+          "type": "string",
+          "example": "MYPROJ"
+        },
+        "authPolicy": {
+          "type": "string",
+          "example": "Basic"
+        },
+        "userData": {
+          "type": "string",
+          "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
+        },
+        "flow": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DemandSequence"
+          }
+        }
+      }
+    },
+    "DemandSequence": {
+      "type": "object",
+      "required": [
+        "sequence",
+        "name"
+      ],
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Backlog"
+        }
+      }
+    },
+    "Defect": {
+      "type": "object",
+      "required": [
+        "source",
+        "url",
+        "project",
+        "authPolicy",
+        "userData",
+        "entryState",
+        "exitState",
+        "severity"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "example": "JIRA"
+        },
+        "url": {
+          "type": "string",
+          "example": "https://myco.atlassian.net/rest/api/latest/"
+        },
+        "project": {
+          "type": "string",
+          "example": "MYPROJ"
+        },
+        "authPolicy": {
+          "type": "string",
+          "example": "Basic"
+        },
+        "userData": {
+          "type": "string",
+          "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
+        },
+        "entryState": {
+          "type": "string",
+          "example": "Open"
+        },
+        "exitState": {
+          "type": "string",
+          "example": "Resolved"
+        },
+        "severity": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DefectSeverity"
+          }
+        }
+      }
+    },
+    "DefectSeverity": {
+      "type": "object",
+      "required": [
+        "sequence",
+        "name",
+        "groupWith"
+      ],
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": 1
+        },
+        "groupWith": {
+          "type": "string",
+          "example": 2
+        }
+      }
+    },
+    "Effort": {
+      "type": "object",
+      "required": [
+        "source",
+        "url",
+        "project",
+        "authPolicy",
+        "userData",
+        "role"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "example": "JIRA"
+        },
+        "url": {
+          "type": "string",
+          "example": "https://myco.atlassian.net/rest/api/latest/"
+        },
+        "project": {
+          "type": "string",
+          "example": "MYPROJ"
+        },
+        "authPolicy": {
+          "type": "string",
+          "example": "Basic"
+        },
+        "userData": {
+          "type": "string",
+          "example": "cGF1ZC5rYXJ0dGVuQHdpc4JvLmNvbTpXaDFwSXRHMDBk"
+        },
+        "role": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EffortRole"
+          }
+        }
+      }
+    },
+    "Status": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "actual",
+          "projected",
+          "status"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Demand Vs Projected"
+          },
+          "actual": {
+            "example": "A calculated result"
+          },
+          "projected": {
+            "example": "A (differently) calculated result',"
+          },
+          "status": {
+            "type": "string",
+            "example": "red"
+          }
+        }
+      }
+    },
+    "EffortRole": {
+      "type": "object",
+      "required": [
+        "name",
+        "groupWith"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "PM"
+        },
+        "groupWith": {
+          "type": "string",
+          "example": "BA"
+        }
+      }
+    },
+    "Projection": {
+      "type": "object",
+      "required": [
+        "startDate",
+        "iterationLength",
+        "backlogSize",
+        "targetVelocity",
+        "darkMatterPercentage",
+        "startIterations",
+        "startVelocity",
+        "endIterations",
+        "endVelocity"
+      ],
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "iterationLength": {
+          "type": "integer",
+          "example": 2
+        },
+        "backlogSize": {
+          "type": "integer",
+          "example": 175
+        },
+        "targetVelocity": {
+          "type": "integer",
+          "example": 20
+        },
+        "darkMatterPercentage": {
+          "type": "integer",
+          "example": 10
+        },
+        "startIterations": {
+          "type": "integer",
+          "example": 3
+        },
+        "startVelocity": {
+          "type": "integer",
+          "example": 10
+        },
+        "endIterations": {
+          "type": "integer",
+          "example": 2
+        },
+        "endVelocity": {
+          "type": "integer",
+          "example": 10
+        }
+      }
+    },
+    "DemandSummary": {
+      "type": "object",
+      "required": [
+        "projectDate",
+        "status"
+      ],
+      "properties": {
+        "projectDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "status": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/DemandSummaryEntry"
+          }
+        }
+      }
+    },
+    "DemandSummaryEntry": {
+      "type": "object",
+      "required": [
+        "storyStatus",
+        "count"
+      ],
+      "properties": {
+        "storyStatus": {
+          "type": "string",
+          "example": "Backlog"
+        },
+        "count": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    },
+    "DefectSummary": {
+      "type": "object",
+      "required": [
+        "projectDate",
+        "severity"
+      ],
+      "properties": {
+        "projectDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "severity": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/DefectSummaryEntry"
+          }
+        }
+      }
+    },
+    "DefectSummaryEntry": {
+      "type": "object",
+      "required": [
+        "severity",
+        "count"
+      ],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "example": "Major"
+        },
+        "count": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    },
+    "EffortSummary": {
+      "type": "object",
+      "required": [
+        "projectDate",
+        "activity"
+      ],
+      "properties": {
+        "projectDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-03-01T00:00:00.000Z"
+        },
+        "activity": {
+          "type": "object",
+          "items": {
+            "$ref": "#/definitions/EffortSummaryEntry"
+          }
+        }
+      }
+    },
+    "EffortSummaryEntry": {
+      "type": "object",
+      "required": [
+        "role",
+        "count"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "example": "Test"
+        },
+        "count": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    }
+  }
 }

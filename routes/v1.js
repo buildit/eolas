@@ -33,5 +33,5 @@ Router.put('/project/:name/projection', projection.updateProjectionByName);
 Router.get('/project/:name/demand/summary', summaryData.getDemandDataSummary);
 Router.get('/project/:name/defect/summary', summaryData.getDefectDataSummary);
 Router.get('/project/:name/effort/summary', summaryData.getEffortDataSummary);
-Router.get('/project/:name/status/summary', summaryData.getStatusDataSummary);
+Router.get('/project/:name/status', summaryData.getStatusDataSummary);
 module.exports = Router;
