@@ -54,3 +54,10 @@ exports.getEffortDataSummary = function (req, res) {
 
   getDataSummary(req, res, projectName, 'dailyEffortSummary');
 };
+
+exports.getStatusDataSummary = function (req, res) {
+  logger.debug('getstatusDataSummary');
+  const projectName = decodeURIComponent(req.params.name);
+
+  getDataSummary(req, res, projectName, 'statuses');
+}
