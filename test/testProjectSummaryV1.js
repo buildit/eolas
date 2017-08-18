@@ -76,23 +76,30 @@ describe('Project Services Summary Array Tests', function() {
     project.createProjectByName(request, response);
   });
 
-  it('Test Get Project Summary', function(done) {
+  it('Test Get Project Summary', function() {
     var response = buildResponse();
     var request  = HttpMocks.createRequest({
       method: 'GET'
     });
+    
+    projectSummary.getProjectSummary(request, response);
 
-    response.on('end', function() {
-      var body = response._getData();
-      should(body.length).be.aboveOrEqual(2);
-      should(body[0]).not.have.property('_id');
-      should(body[0]).have.property('name');
-      should(body[0]).have.property('description');
-      should(body[0]).have.property('status');
-      done();
+    return new Promise((resolve, reject) => {
+      response.on('end', function() {
+        try {
+          const body = response._getData();
+          should(body.length).be.aboveOrEqual(2);
+          should(body[0]).not.have.property('_id');
+          should(body[0]).have.property('name');
+          should(body[0]).have.property('description');
+          should(body[0]).have.property('status');
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
     });
 
-    projectSummary.getProjectSummary(request, response);
   });
 
   it('Test Get Project Summary for a particular portfolio', function(done) {

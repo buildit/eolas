@@ -13,5 +13,8 @@
         "url": "https://builditglobal.harvestapp.com/",
         "encodedUser": "cGF1bC5rYXJzdGVuQHdpcHJvLmNvbTpXaDFwSXRHMDBk"
     },
+    "illuminate": {
+        "url": "http://localhost:7565/"
+    },
     "log-level": "DEBUG"
 }

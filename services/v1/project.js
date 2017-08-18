@@ -2,6 +2,7 @@
 
 const CO = require('co');
 const Config = require('config');
+const rest = require('restler');
 const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
 const Log4js = require('log4js');
@@ -16,10 +17,14 @@ exports.getProjectByName = function (req, res) {
   var projectName = decodeURIComponent(req.params.name);
   logger.info(`getProjectByName for ${projectName}`);
 
-  CO(function*() {
+  CO(function* () {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var aProject = yield col.find({name: projectName}, {_id: 0}).toArray();
+    var aProject = yield col.find({
+      name: projectName
+    }, {
+      _id: 0
+    }).toArray();
     db.close();
 
     if (aProject.length < 1) {
@@ -29,7 +34,7 @@ exports.getProjectByName = function (req, res) {
     } else {
       res.send(aProject[0]);
     }
-  }).catch(function(err) {
+  }).catch(function (err) {
     logger.debug("getProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,10 +56,12 @@ exports.createProjectByName = function (req, res) {
        req.params.p_id: ${JSON.stringify(projectName)}
        req.body.id: ${project.name}`));
   } else {
-    CO(function*() {
+    CO(function* () {
       var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
-      var count = yield col.count({name: projectName});
+      var count = yield col.count({
+        name: projectName
+      });
       if (count > 0) {
         logger.debug("createProjectByName -> Duplicate Resource");
         db.close();
@@ -75,7 +82,7 @@ exports.createProjectByName = function (req, res) {
           res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to find create ' + projectName));
         }
       }
-    }).catch(function(err) {
+    }).catch(function (err) {
       logger.debug("createProjectByName - ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -98,10 +105,14 @@ exports.updateProjectByName = function (req, res) {
        req.params.p_id: ${JSON.stringify(projectName)}
        req.body.id: ${project.name}`));
   } else {
-    CO(function*() {
+    CO(function* () {
       var db = yield MongoClient.connect(utils.dbCorePath());
       var col = db.collection('project');
-      var result = yield col.updateOne({name: projectName}, {$set: project});
+      var result = yield col.updateOne({
+        name: projectName
+      }, {
+        $set: project
+      });
       db.close();
 
       if (result.matchedCount > 0) {
@@ -114,7 +125,7 @@ exports.updateProjectByName = function (req, res) {
         res.status(HttpStatus.NOT_FOUND);
         res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot update.'));
       }
-    }).catch(function(err) {
+    }).catch(function (err) {
       logger.debug("updateProjectByName -> ERROR");
       logger.error(err);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -128,10 +139,12 @@ exports.deleteProjectByName = function (req, res) {
 
   var projectName = decodeURIComponent(req.params.name);
 
-  CO(function*() {
+  CO(function* () {
     var db = yield MongoClient.connect(utils.dbCorePath());
     var col = db.collection('project');
-    var result = yield col.deleteOne({name: projectName});
+    var result = yield col.deleteOne({
+      name: projectName
+    });
     db.close();
     if (result.deletedCount > 0) {
       res.status(HttpStatus.OK);
@@ -141,10 +154,41 @@ exports.deleteProjectByName = function (req, res) {
       res.status(HttpStatus.NOT_FOUND);
       res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, 'Project ' + projectName + ' does not exist.  Cannot Delete.'));
     }
-  }).catch(function(err) {
+  }).catch(function (err) {
     logger.debug("deleteProjectByName - ERROR");
     logger.error(err);
     res.status(HttpStatus.INTERNAL_SERVER_ERROR);
     res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, 'Unable to delete project ' + projectName));
   });
 };
+
+exports.getProjectPing = function (req, res) {
+  logger.info("deleteProjectByName");
+
+  const projectName = decodeURIComponent(req.params.name);
+
+  CO(function* () {
+    const url = `${Config.get('illuminate.url')}v1/project/${projectName}/ping`;
+    try {
+      const status = yield restlerAsPromise('get', url);
+      res.send(status.data);
+    } catch (error) {
+      logger.error(`Error trying to get status from illuminate`, error);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+      res.send(`Error communicating with illuminate`);
+    }
+  })
+}
+
+function restlerAsPromise(verb, url, restlerOptions) {
+  return new Promise((resolve, reject) => {
+    rest.get(url, restlerOptions)
+    .on('complete', (data, response) => {
+      resolve({ data, response });
+    }).on('fail', function(data, response) {
+      reject({ data, response });
+    }).on('error', function(data, response) {
+      reject({ data, response });
+    });
+  });
+}

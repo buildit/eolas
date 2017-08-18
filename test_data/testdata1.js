@@ -87,7 +87,9 @@ projectionInfo = {
     demand: demandInfo,
     defect: defectInfo,
     effort: effortInfo,
-    projection: projectionInfo};
+    projection: projectionInfo,
+    status: 'green',
+  };
 
 MongoClient.connect(utils.dbCorePath(), function (err, db) {
   assert.equal(null, err);

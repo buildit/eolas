@@ -29,6 +29,7 @@ Router.get('/project/:name/effort', effort.getEffortByName);
 Router.get('/project/:name/event', event.getEventByName);
 Router.get('/project/:name/projection', projection.getProjectionByName);
 Router.put('/project/:name/projection', projection.updateProjectionByName);
+Router.get('/project/:name/ping', project.getProjectPing);
 
 Router.get('/project/:name/demand/summary', summaryData.getDemandDataSummary);
 Router.get('/project/:name/defect/summary', summaryData.getDefectDataSummary);
