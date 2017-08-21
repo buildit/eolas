@@ -162,13 +162,13 @@ exports.deleteProjectByName = function (req, res) {
   });
 };
 
-exports.getProjectPing = function (req, res) {
+exports.getProjectValidation = function (req, res) {
   logger.info("deleteProjectByName");
 
   const projectName = decodeURIComponent(req.params.name);
 
   CO(function* () {
-    const url = `${Config.get('illuminate.url')}v1/project/${projectName}/ping`;
+    const url = `${Config.get('illuminate.url')}v1/project/${projectName}/validate`;
     try {
       const status = yield restlerAsPromise('get', url);
       res.send(status.data);
@@ -180,9 +180,25 @@ exports.getProjectPing = function (req, res) {
   })
 }
 
+exports.validateProject = function (req, res) {
+  logger.info("deleteProjectByName");
+
+  CO(function* () {
+    const url = `${Config.get('illuminate.url')}v1/project/validate`;
+    try {
+      const status = yield restlerAsPromise('postJson', url, req.body);
+      res.send(status.data);
+    } catch (error) {
+      logger.error(`Error trying to get status from illuminate`, error);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+      res.send(`Error communicating with illuminate`);
+    }
+  })
+}
+
 function restlerAsPromise(verb, url, restlerOptions) {
   return new Promise((resolve, reject) => {
-    rest.get(url, restlerOptions)
+    rest[verb](url, restlerOptions)
     .on('complete', (data, response) => {
       resolve({ data, response });
     }).on('fail', function(data, response) {

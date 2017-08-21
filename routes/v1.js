@@ -18,6 +18,9 @@ Router.get('/ping/deep', about.deepPing);
 Router.get('/doc', apiDocs.serveDoc);
 
 Router.get('/project', projectSummary.getProjectSummary);
+Router.get('/project', projectSummary.getProjectSummary);
+Router.post('/validateProject', project.validateProject);
+
 
 Router.get('/project/:name', project.getProjectByName);
 Router.put('/project/:name', project.updateProjectByName);
@@ -29,7 +32,7 @@ Router.get('/project/:name/effort', effort.getEffortByName);
 Router.get('/project/:name/event', event.getEventByName);
 Router.get('/project/:name/projection', projection.getProjectionByName);
 Router.put('/project/:name/projection', projection.updateProjectionByName);
-Router.get('/project/:name/ping', project.getProjectPing);
+Router.get('/project/:name/validate', project.getProjectValidation);
 
 Router.get('/project/:name/demand/summary', summaryData.getDemandDataSummary);
 Router.get('/project/:name/defect/summary', summaryData.getDefectDataSummary);
