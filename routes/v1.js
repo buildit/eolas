@@ -19,7 +19,7 @@ Router.get('/doc', apiDocs.serveDoc);
 
 Router.get('/project', projectSummary.getProjectSummary);
 Router.get('/project', projectSummary.getProjectSummary);
-Router.post('/validateProject', project.validateProject);
+Router.get('/validateProject', project.validateProject);
 
 
 Router.get('/project/:name', project.getProjectByName);

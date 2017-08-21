@@ -181,12 +181,13 @@ exports.getProjectValidation = function (req, res) {
 }
 
 exports.validateProject = function (req, res) {
-  logger.info("deleteProjectByName");
+  const payload = JSON.parse(req.query.payload);
+  logger.debug("validateProject");
 
   CO(function* () {
     const url = `${Config.get('illuminate.url')}v1/project/validate`;
     try {
-      const status = yield restlerAsPromise('postJson', url, req.body);
+      const status = yield restlerAsPromise('json', url, payload);
       res.send(status.data);
     } catch (error) {
       logger.error(`Error trying to get status from illuminate`, error);
