@@ -8,7 +8,7 @@ const log4js = require('log4js');
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+logger.level = config.get('log-level');
 
 const ACCEPTANCETESTPROJECT = 'ProjectAcceptanceTestProject';
 const NOPROJECT = 'ShouldNotExistProject';

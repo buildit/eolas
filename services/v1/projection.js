@@ -10,7 +10,7 @@ const utils = require('../../util/utils');
 
 Log4js.configure('config/log4js_config.json', {});
 const logger = Log4js.getLogger();
-logger.setLevel(Config.get('log-level'));
+logger.level = Config.get('log-level');
 
 exports.getProjectionByName = function (req, res) {
   logger.debug("getProjectionByName");

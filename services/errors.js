@@ -6,7 +6,7 @@ const HttpStatus = require('http-status-codes');
 
 Log4js.configure('config/log4js_config.json', {});
 const logger = Log4js.getLogger();
-logger.setLevel(Config.get('log-level'));
+logger.level = Config.get('log-level');
 
 exports.logErrors = function(err, req, res, next) {
   logger.error("#### An Error occured \n" + err.stack);

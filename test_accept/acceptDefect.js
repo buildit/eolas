@@ -7,7 +7,7 @@ const utils = require('../util/utils');
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+logger.level = config.get('log-level');
 
 const ACCEPTANCETESTPROJECT = 'DefectAcceptanceTestProject';
 const NOPROJECT = 'ShouldNotExistProject';

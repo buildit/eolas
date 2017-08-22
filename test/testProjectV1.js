@@ -1,14 +1,21 @@
 const HttpMocks = require('node-mocks-http');
 const HttpStatus = require('http-status-codes');
-const project = require('../services/v1/project');
+const Sinon = require('sinon');
+require('sinon-as-promised');
 const should = require('should');
-
+const CO = require('co');
+const illuminateSystems = require('@buildit/illuminate-systems');
 const config = require('config');
 const log4js = require('log4js');
+const R = require('ramda');
+
+const constants = require('../util/constants');
+const project = require('../services/v1/project');
+
 
 log4js.configure('config/log4js_config.json', {});
 const logger = log4js.getLogger();
-logger.setLevel(config.get('log-level'));
+logger.level = config.get('log-level');
 
 const UNITTESTPROJECT = 'Project Unit Test Project';
 const NOPROJECT = 'Should Not Exist Project';
@@ -263,6 +270,141 @@ describe('Project Services Tests', function() {
     });
 
     project.deleteProjectByName(request, response);
+  });    
+    
+  describe('check', () => {
+    const sandbox = Sinon.sandbox.create();
+    before(() => {
+      sandbox.stub(illuminateSystems.demand.jira, 'testDemand').resolves({ status: constants.STATUSOK });
+      sandbox.stub(illuminateSystems.demand.trello, 'testDemand').resolves({ status: constants.STATUSOK });
+      sandbox.stub(illuminateSystems.defect.jira, 'testDefect').resolves({ status: constants.STATUSOK });
+      sandbox.stub(illuminateSystems.effort.harvest, 'testEffort').resolves({ status: constants.STATUSOK });
+    });
+    const baseProject = {
+      name: 'A Test Project',
+      demand: {
+        source: 'Jira',
+      },
+      defect: {
+        source: 'Jira',
+      },
+      effort: {
+        source: 'Harvest',
+      }
+    }
+    
+    describe('demand', () => {
+      it('passes when there is demand and Jira as a source', () =>
+        CO(function* () {
+          const result = yield project.check(baseProject);
+          should(result.demand.status).equal(constants.STATUSOK);
+        })
+      );
+
+      it('passes when there is demand and Trello as a source', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { demand: { source: 'Trello' } });
+          const result = yield project.check(aProject);
+          should(result.demand.status).equal(constants.STATUSOK);
+        })
+      );
+
+      it('fails if there is no demand', () =>
+        CO(function* () {
+          const aProject = R.omit(['demand'], baseProject);
+          const result = yield project.check(aProject);
+          should(result.demand.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if there is no demand source', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { demand: { } });
+          const result = yield project.check(aProject);
+          should(result.demand.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if the demand source is anything other than "Jira" or "Trello"', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { demand: { source: 'bad!' } });
+          const result = yield project.check(aProject);
+          should(result.demand.status).equal(constants.STATUSERROR);
+        })
+      );
+    });
+
+    describe('defect', () => {
+      it('passes when there is defect and Jira as a source', () =>
+        CO(function* () {
+          const result = yield project.check(baseProject);
+          should(result.defect.status).equal(constants.STATUSOK);
+        })
+      );
+
+      it('fails if there is no defect', () =>
+        CO(function* () {
+          const aProject = R.omit(['defect'], baseProject);
+          const result = yield project.check(aProject);
+          should(result.defect.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if there is no defect source', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { defect: { } });
+          const result = yield project.check(aProject);
+          should(result.defect.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if the defect source is anything other than "Jira" or "Trello"', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { defect: { source: 'bad!' } });
+          const result = yield project.check(aProject);
+          should(result.defect.status).equal(constants.STATUSERROR);
+        })
+      );
+    });
+
+    describe('effort', () => {
+      it('passes when there is effort and Harvest as a source', () =>
+        CO(function* () {
+          const result = yield project.check(baseProject);
+          should(result.effort.status).equal(constants.STATUSOK);
+        })
+      );
+
+      it('fails if there is no effort', () =>
+        CO(function* () {
+          const aProject = R.omit(['effort'], baseProject);
+          const result = yield project.check(aProject);
+          should(result.effort.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if there is no effort source', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { effort: { } });
+          const result = yield project.check(aProject);
+          should(result.effort.status).equal(constants.STATUSERROR);
+        })
+      );
+
+      it('fails if the effort source is anything other than "Jira" or "Trello"', () =>
+        CO(function* () {
+          const aProject = R.merge(baseProject, { effort: { source: 'bad!' } });
+          const result = yield project.check(aProject);
+          should(result.effort.status).equal(constants.STATUSERROR);
+        })
+      );
+    });
+
+    after(() => {
+      sandbox.restore();
+    });
   });
 
 });
+
+

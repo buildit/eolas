@@ -3,6 +3,11 @@
 exportConstant('DEFECTSUMMARYCOLLECTION', 'dailyDefectSummary');
 exportConstant('DEMANDSUMMARYCOLLECTION', 'dailyDemandSummary');
 exportConstant('EFFORTSUMMARYCOLLECTION', 'dailyEffortSummary');
+
+exportConstant('STATUSOK', 'green');
+exportConstant('STATUSWARNING', 'amber');
+exportConstant('STATUSERROR', 'red');
+
 exportConstant('EVENTCOLLECTION', 'loadEvents');
 exportConstant('PROJECTCOLLECTION', 'project');
 

@@ -2,7 +2,8 @@
 
 const CO = require('co');
 const Config = require('config');
-const rest = require('restler');
+const illuminateSystems = require('@buildit/illuminate-systems');
+const constants = require('../../util/constants');
 const errorHelper = require('../errors');
 const HttpStatus = require('http-status-codes');
 const Log4js = require('log4js');
@@ -11,7 +12,7 @@ const utils = require('../../util/utils');
 
 Log4js.configure('config/log4js_config.json', {});
 const logger = Log4js.getLogger();
-logger.setLevel(Config.get('log-level'));
+logger.level = Config.get('log-level');
 
 exports.getProjectByName = function (req, res) {
   var projectName = decodeURIComponent(req.params.name);
@@ -164,20 +165,32 @@ exports.deleteProjectByName = function (req, res) {
 
 exports.getProjectValidation = function (req, res) {
   logger.info("deleteProjectByName");
-
   const projectName = decodeURIComponent(req.params.name);
 
   CO(function* () {
-    const url = `${Config.get('illuminate.url')}v1/project/${projectName}/validate`;
-    try {
-      const status = yield restlerAsPromise('get', url);
-      res.send(status.data);
-    } catch (error) {
-      logger.error(`Error trying to get status from illuminate`, error);
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(`Error communicating with illuminate`);
+    const db = yield MongoClient.connect(utils.dbCorePath());
+    const col = db.collection('project');
+    const aProject = yield col.find({
+      name: projectName
+    }, {
+      _id: 0
+    }).toArray();
+    db.close();
+
+    if (aProject.length < 1) {
+      res.status(HttpStatus.NOT_FOUND);
+      res.send(errorHelper.errorBody(HttpStatus.NOT_FOUND, `Unable to find project [${projectName}] in ${utils.dbCorePath()}`));
+    } else {
+      const status = yield module.exports.check(aProject[0], constants);
+      res.send(status);
     }
   })
+  .catch(function (err) {
+    logger.debug("getProjectValidation - ERROR");
+    logger.error(err);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, `Unable to validate project ${projectName}`));
+  });
 }
 
 exports.validateProject = function (req, res) {
@@ -185,27 +198,52 @@ exports.validateProject = function (req, res) {
   logger.debug("validateProject");
 
   CO(function* () {
-    const url = `${Config.get('illuminate.url')}v1/project/validate`;
-    try {
-      const status = yield restlerAsPromise('json', url, payload);
-      res.send(status.data);
-    } catch (error) {
-      logger.error(`Error trying to get status from illuminate`, error);
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      res.send(`Error communicating with illuminate`);
-    }
+    const status = yield module.exports.check(payload);
+    res.send(status);
   })
+  .catch(function (err) {
+    logger.debug("validateProject - ERROR");
+    logger.error(err);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    res.send(errorHelper.errorBody(HttpStatus.INTERNAL_SERVER_ERROR, `Unable to validate project ${payload.name}`));
+  });
 }
 
-function restlerAsPromise(verb, url, restlerOptions) {
-  return new Promise((resolve, reject) => {
-    rest[verb](url, restlerOptions)
-    .on('complete', (data, response) => {
-      resolve({ data, response });
-    }).on('fail', function(data, response) {
-      reject({ data, response });
-    }).on('error', function(data, response) {
-      reject({ data, response });
-    });
-  });
+exports.check = function(aProject) {
+  const validDefectSystems = Reflect.ownKeys(illuminateSystems.defect);
+  const validDemandSystems = Reflect.ownKeys(illuminateSystems.demand);
+  const validEffortSystems = Reflect.ownKeys(illuminateSystems.effort);
+  
+  const promises = [];
+  
+  if (!aProject.demand) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Demand Configured') }));
+  } else if (!aProject.demand.source || !validDemandSystems.includes(aProject.demand.source.toLowerCase())) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Demand Source') }));
+  } else {
+    promises.push(illuminateSystems.demand[aProject.demand.source.toLowerCase()].testDemand(aProject, constants));
+  }
+
+  if (!aProject.defect) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Defect Configured') }));
+  } else if (!aProject.defect.source || !validDefectSystems.includes(aProject.defect.source.toLowerCase())) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Defect Source') }));
+  } else {
+    promises.push(illuminateSystems.defect[aProject.defect.source.toLowerCase()].testDefect(aProject, constants));
+  }
+
+  if (!aProject.effort) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Effort Configured') }));
+  } else if (!aProject.effort.source || !validEffortSystems.includes(aProject.effort.source.toLowerCase())) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid effort Source') }));
+  } else {
+    promises.push(illuminateSystems.effort[aProject.effort.source.toLowerCase()].testEffort(aProject, constants));
+  }
+
+  return Promise.all(promises)
+  .then(([demand, defect, effort]) => ({
+    demand,
+    defect,
+    effort,
+  }));
 }

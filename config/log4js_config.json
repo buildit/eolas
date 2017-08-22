@@ -1,14 +1,23 @@
 {
-   "appenders": [
-      {
-      	"type": "dateFile",
-      	"filename": "eolas.log",
-   	   	"pattern": "-MM-dd",
-      	"alwaysIncludePattern": true,
-      	"layout": {
-          	"type": "pattern",
-          	"pattern": "[%r] [%h] [%p] - %m"
-        	}
-      }
-    ]
+
+	"appenders": {
+    "file": {
+      "type": "dateFile",
+      "filename": "eolas.log",
+        "pattern": "-MM-dd",
+      "alwaysIncludePattern": true,
+      "layout": {
+          "type": "pattern",
+          "pattern": "[%r] [%h] [%p] - %m"
+        }
+    }
+  },
+  "categories": {
+    "default": { 
+      "appenders": [
+        "file"
+      ],
+      "level": "ERROR"
+    }
+  }
 }
