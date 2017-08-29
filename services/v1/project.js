@@ -2,6 +2,7 @@
 
 const CO = require('co');
 const Config = require('config');
+const R = require('ramda');
 const illuminateSystems = require('@buildit/illuminate-systems');
 const constants = require('../../util/constants');
 const errorHelper = require('../errors');
@@ -209,29 +210,29 @@ exports.validateProject = function (req, res) {
   });
 }
 
+const systemDefinitionExists = (aSystemDeffiniton) =>
+  (R.not(R.isNil(aSystemDeffiniton)) &&
+  R.not(R.isEmpty(aSystemDeffiniton)) &&
+  R.not(R.isNil(aSystemDeffiniton.source)) &&
+  R.not(R.isNil(aSystemDeffiniton.url)));
+
 exports.check = function(aProject) {  
   const promises = [];
   
-  if (!aProject.demand) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Demand Configured') }));
-  } else if (!aProject.demand.source || !illuminateSystems.demand[aProject.demand.source.toLowerCase()]) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Demand Source') }));
+  if (!systemDefinitionExists(aProject.demand)) {
+    promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Demand Configured') }));
   } else {
     promises.push(illuminateSystems.demand[aProject.demand.source.toLowerCase()].testDemand(aProject, constants));
   }
 
-  if (!aProject.defect) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Defect Configured') }));
-  } else if (!aProject.defect.source || !illuminateSystems.defect[aProject.defect.source.toLowerCase()]) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Defect Source') }));
+  if (!systemDefinitionExists(aProject.defect)) {
+    promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Defect Configured') }));
   } else {
     promises.push(illuminateSystems.defect[aProject.defect.source.toLowerCase()].testDefect(aProject, constants));
   }
 
-  if (!aProject.effort) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('No Effort Configured') }));
-  } else if (!aProject.effort.source || !illuminateSystems.effort[aProject.effort.source.toLowerCase()]) {
-    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid effort Source') }));
+  if (!systemDefinitionExists(aProject.effort)) {
+    promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Effort Configured') }));
   } else {
     promises.push(illuminateSystems.effort[aProject.effort.source.toLowerCase()].testEffort(aProject, constants));
   }
