@@ -221,18 +221,24 @@ exports.check = function(aProject) {
   
   if (!systemDefinitionExists(aProject.demand)) {
     promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Demand Configured') }));
+  } else if (!illuminateSystems.demand[aProject.demand.source.toLowerCase()]) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Demand Source') }));
   } else {
     promises.push(illuminateSystems.demand[aProject.demand.source.toLowerCase()].testDemand(aProject, constants));
   }
 
   if (!systemDefinitionExists(aProject.defect)) {
     promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Defect Configured') }));
+  } else if (!illuminateSystems.defect[aProject.defect.source.toLowerCase()]) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Defect Source') }));
   } else {
     promises.push(illuminateSystems.defect[aProject.defect.source.toLowerCase()].testDefect(aProject, constants));
   }
 
   if (!systemDefinitionExists(aProject.effort)) {
     promises.push(Promise.resolve({ status: constants.STATUSWARNING, data: illuminateSystems.utils.validationResponseMessageFormat('No Effort Configured') }));
+  } else if (!illuminateSystems.effort[aProject.effort.source.toLowerCase()]) {
+    promises.push(Promise.resolve({ status: constants.STATUSERROR, data: illuminateSystems.utils.validationResponseMessageFormat('Invalid Effort Source') }));
   } else {
     promises.push(illuminateSystems.effort[aProject.effort.source.toLowerCase()].testEffort(aProject, constants));
   }

@@ -284,12 +284,15 @@ describe('Project Services Tests', function() {
       name: 'A Test Project',
       demand: {
         source: 'Jira',
+        url: 'some.url',
       },
       defect: {
         source: 'Jira',
+        url: 'some.url',
       },
       effort: {
         source: 'Harvest',
+        url: 'some.url',
       }
     }
     
@@ -303,7 +306,7 @@ describe('Project Services Tests', function() {
 
       it('passes when there is demand and Trello as a source', () =>
         CO(function* () {
-          const aProject = R.merge(baseProject, { demand: { source: 'Trello' } });
+          const aProject = R.merge(baseProject, { demand: { source: 'Trello', url: 'some.url' } });
           const result = yield project.check(aProject);
           should(result.demand.status).equal(constants.STATUSOK);
         })
@@ -313,7 +316,7 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.omit(['demand'], baseProject);
           const result = yield project.check(aProject);
-          should(result.demand.status).equal(constants.STATUSERROR);
+          should(result.demand.status).equal(constants.STATUSWARNING);
         })
       );
 
@@ -321,13 +324,13 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.merge(baseProject, { demand: { } });
           const result = yield project.check(aProject);
-          should(result.demand.status).equal(constants.STATUSERROR);
+          should(result.demand.status).equal(constants.STATUSWARNING);
         })
       );
 
       it('fails if the demand source is anything other than "Jira" or "Trello"', () =>
         CO(function* () {
-          const aProject = R.merge(baseProject, { demand: { source: 'bad!' } });
+          const aProject = R.merge(baseProject, { demand: { source: 'bad!', url: 'some.url' } });
           const result = yield project.check(aProject);
           should(result.demand.status).equal(constants.STATUSERROR);
         })
@@ -346,7 +349,7 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.omit(['defect'], baseProject);
           const result = yield project.check(aProject);
-          should(result.defect.status).equal(constants.STATUSERROR);
+          should(result.defect.status).equal(constants.STATUSWARNING);
         })
       );
 
@@ -354,13 +357,13 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.merge(baseProject, { defect: { } });
           const result = yield project.check(aProject);
-          should(result.defect.status).equal(constants.STATUSERROR);
+          should(result.defect.status).equal(constants.STATUSWARNING);
         })
       );
 
       it('fails if the defect source is anything other than "Jira" or "Trello"', () =>
         CO(function* () {
-          const aProject = R.merge(baseProject, { defect: { source: 'bad!' } });
+          const aProject = R.merge(baseProject, { defect: { source: 'bad!', url: 'some.url' } });
           const result = yield project.check(aProject);
           should(result.defect.status).equal(constants.STATUSERROR);
         })
@@ -379,7 +382,7 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.omit(['effort'], baseProject);
           const result = yield project.check(aProject);
-          should(result.effort.status).equal(constants.STATUSERROR);
+          should(result.effort.status).equal(constants.STATUSWARNING);
         })
       );
 
@@ -387,13 +390,13 @@ describe('Project Services Tests', function() {
         CO(function* () {
           const aProject = R.merge(baseProject, { effort: { } });
           const result = yield project.check(aProject);
-          should(result.effort.status).equal(constants.STATUSERROR);
+          should(result.effort.status).equal(constants.STATUSWARNING);
         })
       );
 
-      it('fails if the effort source is anything other than "Jira" or "Trello"', () =>
+      it('fails if the effort source is anything other than "Harvest"', () =>
         CO(function* () {
-          const aProject = R.merge(baseProject, { effort: { source: 'bad!' } });
+          const aProject = R.merge(baseProject, { effort: { source: 'bad!', url: 'some.url' } });
           const result = yield project.check(aProject);
           should(result.effort.status).equal(constants.STATUSERROR);
         })
