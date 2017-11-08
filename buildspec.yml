@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - curl -sL https://deb.nodesource.com/setup_8.x | bash -
+      - apt-get install -y nodejs
+
+  pre_build:
+    commands:
+      - $(aws ecr get-login --region us-west-1)
+      - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - apt-get update
+
+  build:
+    commands:
+      - npm install
+      - npm run lint
+      - npm run security
+      - "NODE_ENV='staging' npm run package"
+      - cd build
+      - npm install --production
+      - docker build --tag "${REPOSITORY_URI}:${TAG}" .
+      # - docker run -d -p 80:4200 --name bookit-client-container bookit-client
+
+  post_build:
+    commands:
+      - test $CODEBUILD_BUILD_SUCCEEDING -eq 0 || docker push "${REPOSITORY_URI}:${TAG}"
+      - printf '{"tag":"%s"}' $TAG > build.json
+
+artifacts:
+  files:
+    - build.json

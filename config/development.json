@@ -1,7 +1,7 @@
 {
     "datastore": {
         "dbUrl": "mongodb://localhost:27017",
-        "context": "development",
+        "context": "ETL",
         "rootDB": "buildit"
     },
     "server": {

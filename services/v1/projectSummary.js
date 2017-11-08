@@ -38,6 +38,7 @@ function getProjectSummaryAll (req, res) {
     var projectList = yield col.find({},
       {_id: 0, name: 1, program: 1, portfolio: 1, status: 1, description: 1}).toArray();
     db.close();
+    logger.debug(`${projectList.length} projects found`);
     res.send(projectList);
   }).catch(function(err) {
     logger.error(err);
