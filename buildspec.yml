@@ -17,7 +17,6 @@ phases:
       - npm install
       - npm run lint
       - npm run security
-      - npm prune --production
       - npm shrinkwrap
       - "NODE_ENV='staging' npm run package"
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
