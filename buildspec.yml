@@ -17,9 +17,9 @@ phases:
       - npm install
       - npm run lint
       - npm run security
+      - npm prune --production
+      - npm shrinkwrap
       - "NODE_ENV='staging' npm run package"
-      - cd build
-      - npm install --production
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
       # - docker run -d -p 80:4200 --name bookit-client-container bookit-client
 
