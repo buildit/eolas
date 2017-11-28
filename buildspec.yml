@@ -18,7 +18,7 @@ phases:
       - npm run lint
       - npm run security
       - npm shrinkwrap
-      - "NODE_ENV='staging' npm run package"
+      - "NODE_ENV='integration' DB_URL='mongodb://localhost:27017' SERVER_URL='localhost' SERVER_PORT='4300' npm run package"
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
       # - docker run -d -p 80:4200 --name bookit-client-container bookit-client
 

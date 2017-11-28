@@ -29,6 +29,10 @@ gulp.task('config', ['clean'], () => {
   const version = process.env.VERSION || 'unknown';
 
   gulp.src('./config/deployment_template.json')
+    .pipe(template({ eolas_version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `itegration`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
+    .pipe(rename('integration.json'))
+    .pipe(gulp.dest('./dist/config'));
+  gulp.src('./config/deployment_template.json')
     .pipe(template({ eolas_version: `${version}`, databaseurl: `${databaseURL}`, dbcontext: `staging`, serverurl: `${serverURL}`, serverport: `${serverPort}`, loglevel: `${logLevel}` }))
     .pipe(rename('staging.json'))
     .pipe(gulp.dest('./dist/config'));
