@@ -7,6 +7,11 @@ const middleware = require('./routes/processors');
 const about = require('./routes/about');
 const v1Route = require('./routes/v1');
 
+if (!Config.has('log-level')) {
+  console.log(`Invalid configuration for ${process.env.NODE_ENV} env`);  // eslint-disable-line no-console
+  return;
+}
+
 Log4js.configure('./config/log4js_config.json', {});
 const logger = Log4js.getLogger();
 logger.level = Config.get('log-level');
